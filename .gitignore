@@ -1,0 +1,8 @@
+Application/obj
+Application/bin
+Domain/obj
+Domain/bin
+Infrastructure/obj
+Infrastructure/bin
+webApi/obj
+webApi/bin

@@ -1,0 +1,46 @@
+﻿@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+@if (isLoggedIn)
+{
+    <span>Hello, User!</span>
+    <button class="logout-btn" @onclick="Logout">Log out</button>
+}
+else
+{
+    <a href="/login" class="nav-link">Log in</a>
+    <a href="/register" class="nav-link">Register</a>
+}
+
+<style>
+    .logout-btn {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+</style>
+
+@code {
+    private bool isLoggedIn = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await AuthService.GetTokenAsync();
+        isLoggedIn = !string.IsNullOrEmpty(token);
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        isLoggedIn = false;
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+}
