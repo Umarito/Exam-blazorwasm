@@ -1,0 +1,15 @@
+  Определение проектов для восстановления...
+  Все проекты обновлены для восстановления.
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\Pages\Authentication.razor(3,1): warning RZ10012: Found markup element with unexpected name 'RemoteAuthenticatorView'. If this is intended to be a component, add a @using directive for its namespace. [C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\BlazorWasm.csproj]
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\Pages\Authentication.razor(2,52): error CS0234: Тип или имя пространства имен "Authentication" не существует в пространстве имен "Microsoft.AspNetCore.Components.WebAssembly" (возможно, отсутствует ссылка на сборку). [C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\BlazorWasm.csproj]
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\Layout\RedirectToLogin.razor(1,52): error CS0234: Тип или имя пространства имен "Authentication" не существует в пространстве имен "Microsoft.AspNetCore.Components.WebAssembly" (возможно, отсутствует ссылка на сборку). [C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\BlazorWasm.csproj]
+
+Ошибка сборки.
+
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\Pages\Authentication.razor(3,1): warning RZ10012: Found markup element with unexpected name 'RemoteAuthenticatorView'. If this is intended to be a component, add a @using directive for its namespace. [C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\BlazorWasm.csproj]
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\Pages\Authentication.razor(2,52): error CS0234: Тип или имя пространства имен "Authentication" не существует в пространстве имен "Microsoft.AspNetCore.Components.WebAssembly" (возможно, отсутствует ссылка на сборку). [C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\BlazorWasm.csproj]
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\Layout\RedirectToLogin.razor(1,52): error CS0234: Тип или имя пространства имен "Authentication" не существует в пространстве имен "Microsoft.AspNetCore.Components.WebAssembly" (возможно, отсутствует ссылка на сборку). [C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\BlazorWasm.csproj]
+    Предупреждений: 1
+    Ошибок: 2
+
+Прошло времени 00:00:02.57

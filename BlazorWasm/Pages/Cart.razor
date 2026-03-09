@@ -1,0 +1,105 @@
+@page "/cart"
+@inject FakeDataService DataService
+
+<PageTitle>Your Cart - Avrang.tj</PageTitle>
+
+<div class="cart-page">
+    <h1 class="cart-title">Your Shopping Cart</h1>
+
+    <div class="cart-layout">
+        <div class="cart-items-list">
+            @if (CartItems == null || !CartItems.Any())
+            {
+                <p>Your cart is empty.</p>
+                <a href="/" class="btn btn-outline">Continue Shopping</a>
+            }
+            else
+            {
+                @foreach (var item in CartItems)
+                {
+                    <div class="cart-item">
+                        <div class="cart-item-img"></div>
+                        <div class="cart-item-info">
+                            <span class="cart-item-category">@item.Product.Category?.Name</span>
+                            <h2 class="cart-item-name">@item.Product.Name</h2>
+                            <button class="remove-btn" @onclick="() => RemoveItem(item)">Remove</button>
+                        </div>
+                        <div class="cart-item-controls">
+                            <div class="item-price">$@item.Product.Price.ToString("F2")</div>
+                            <div class="quantity-picker">
+                                <button class="qty-btn" @onclick="() => Decrement(item)">-</button>
+                                <span class="qty-val">@item.Quantity</span>
+                                <button class="qty-btn" @onclick="() => Increment(item)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        @if (CartItems != null && CartItems.Any())
+        {
+            <aside class="order-summary">
+                <h2 class="summary-title">Order Summary</h2>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>$@Subtotal.ToString("F2")</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span style="color: #27ae60;">Free</span>
+                </div>
+                <div class="summary-row">
+                    <span>Estimated Tax</span>
+                    <span>$0.00</span>
+                </div>
+                
+                <div class="promo-wrapper">
+                    <input type="text" class="promo-input" placeholder="Promo code">
+                    <button class="btn-apply-promo">Apply</button>
+                </div>
+
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span>$@Subtotal.ToString("F2")</span>
+                </div>
+
+                <a href="/checkout" class="btn-checkout">Go to Checkout</a>
+                
+                <p style="font-size: 12px; color: var(--text-secondary); text-align: center; margin-top: var(--space-3);">
+                    Secure SSL encrypted payment
+                </p>
+            </aside>
+        }
+    </div>
+</div>
+
+@code {
+    private List<CartItem> CartItems { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        // Mocking a cart state using the first 3 products
+        var products = DataService.Products.Take(3).ToList();
+        
+        if (products.Count >= 3)
+        {
+            CartItems.Add(new CartItem { Id = 1, Product = products[0], Quantity = 1 });
+            CartItems.Add(new CartItem { Id = 2, Product = products[1], Quantity = 1 });
+            CartItems.Add(new CartItem { Id = 3, Product = products[2], Quantity = 1 });
+        }
+    }
+
+    private decimal Subtotal => CartItems.Sum(i => i.Product.Price * i.Quantity);
+
+    private void Increment(CartItem item) => item.Quantity++;
+    private void Decrement(CartItem item)
+    {
+        if (item.Quantity > 1) item.Quantity--;
+    }
+    
+    private void RemoveItem(CartItem item)
+    {
+        CartItems.Remove(item);
+    }
+}

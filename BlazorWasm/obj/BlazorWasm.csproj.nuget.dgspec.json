@@ -44,11 +44,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Components.WebAssembly": {
+            "Microsoft.AspNetCore.Components.Authorization": {
               "target": "Package",
               "version": "[9.0.10, )"
             },
-            "Microsoft.AspNetCore.Components.WebAssembly.Authentication": {
+            "Microsoft.AspNetCore.Components.WebAssembly": {
               "target": "Package",
               "version": "[9.0.10, )"
             },

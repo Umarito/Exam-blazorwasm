@@ -1,0 +1,145 @@
+@page "/product/{id:int}"
+@inject FakeDataService DataService
+
+<PageTitle>@(Product?.Name ?? "Product Not Found") | Avrang.tj</PageTitle>
+
+@if (Product == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="breadcrumbs">
+        <span>Catalog</span>
+        <span>/</span>
+        <span>@Product.Category?.Name</span>
+        <span>/</span>
+        <span style="color: var(--text-main);">@Product.Name</span>
+    </div>
+
+    <div class="product-main">
+        <div class="product-content-area">
+            <div class="gallery-container">
+                <div class="thumbnails">
+                    <div class="thumb active"></div>
+                    <div class="thumb"></div>
+                    <div class="thumb"></div>
+                    <div class="thumb"></div>
+                </div>
+                <div class="main-image">
+                    <div class="image-placeholder-large"></div>
+                </div>
+            </div>
+
+            <div class="product-info-block">
+                <h2>Product Description</h2>
+                <p class="text-muted" style="font-size: 16px; margin-bottom: var(--space-4);">
+                    @Product.Description
+                </p>
+                <!-- Static details for now, as in the template -->
+                <ul class="text-muted" style="padding-left: 20px; font-size: 15px;">
+                    <li>Advanced features built-in</li>
+                    <li>Premium materials for ultimate comfort</li>
+                    <li>Long-lasting durability</li>
+                    <li>Modern, sleek design</li>
+                </ul>
+            </div>
+
+            <div class="product-info-block">
+                <h2>Technical Specifications</h2>
+                <table class="specs-table">
+                    <tbody>
+                        <tr><td class="spec-label">Brand</td><td class="spec-value">@Product.Brand?.Name</td></tr>
+                        <tr><td class="spec-label">Category</td><td class="spec-value">@Product.Category?.Name</td></tr>
+                        <tr><td class="spec-label">Weight</td><td class="spec-value">N/A</td></tr>
+                        <tr><td class="spec-label">Color</td><td class="spec-value">Multiple options</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <aside class="product-sidebar-area">
+            <div class="sticky-sidebar">
+                <div>
+                    <h1>@Product.Name</h1>
+                    <div class="rating-summary">
+                        <div class="stars">
+                            <svg style="fill: currentColor; stroke: none; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
+                            <svg style="fill: currentColor; stroke: none; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
+                            <svg style="fill: currentColor; stroke: none; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
+                            <svg style="fill: currentColor; stroke: none; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
+                            <svg style="fill: none; stroke: currentColor; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
+                        </div>
+                        <span class="text-small">@Product.AverageRating (@Product.ReviewCount Reviews)</span>
+                    </div>
+                    <div class="price-display">
+                        @if (Product.OriginalPrice > Product.Price)
+                        {
+                            <span class="price-old">$@Product.OriginalPrice.ToString("F2")</span>
+                        }
+                        <span class="price-current">$@Product.Price.ToString("F2")</span>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="selector-label">Color</span>
+                    <div class="color-options">
+                        <div class="color-circle active" style="background-color: #111;"></div>
+                        <div class="color-circle" style="background-color: #e0e0e0;"></div>
+                        <div class="color-circle" style="background-color: #3d4a6e;"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="selector-label">Quantity</span>
+                    <div class="quantity-control">
+                        <button class="qty-btn" @onclick="DecrementQuantity">−</button>
+                        <span class="qty-val">@Quantity</span>
+                        <button class="qty-btn" @onclick="IncrementQuantity">+</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                    <button class="btn btn-primary">Add to Cart</button>
+                    <a href="/checkout" class="btn btn-outline" style="width: 100%;">Buy Now</a>
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="delivery-info">
+                        <svg style="width: 18px; height: 18px; color: var(--accent-red);" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon></svg>
+                        <div>
+                            <p style="font-weight: 500; margin: 0;">Free Express Delivery</p>
+                            <p class="text-small" style="margin: 0;">Ships today, arrives in 1-2 business days.</p>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <svg style="width: 18px; height: 18px; color: var(--accent-red);" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <div>
+                            <p style="font-weight: 500; margin: 0;">2 Year Warranty</p>
+                            <p class="text-small" style="margin: 0;">Official warranty from Avrang.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Product? Product;
+    private int Quantity { get; set; } = 1;
+
+    protected override void OnInitialized()
+    {
+        Product = DataService.Products.FirstOrDefault(p => p.Id == Id);
+    }
+
+    private void IncrementQuantity() => Quantity++;
+    private void DecrementQuantity()
+    {
+        if (Quantity > 1) Quantity--;
+    }
+}

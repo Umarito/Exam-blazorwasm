@@ -119,29 +119,6 @@
           "build/net9.0/Microsoft.AspNetCore.Components.WebAssembly.props": {}
         }
       },
-      "Microsoft.AspNetCore.Components.WebAssembly.Authentication/9.0.10": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Components.Authorization": "9.0.10",
-          "Microsoft.AspNetCore.Components.Web": "9.0.10"
-        },
-        "compile": {
-          "lib/net9.0/Microsoft.AspNetCore.Components.WebAssembly.Authentication.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net9.0/Microsoft.AspNetCore.Components.WebAssembly.Authentication.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/Microsoft.AspNetCore.Components.WebAssembly.Authentication.props": {}
-        },
-        "buildMultiTargeting": {
-          "buildMultiTargeting/Microsoft.AspNetCore.Components.WebAssembly.Authentication.props": {}
-        }
-      },
       "Microsoft.AspNetCore.Components.WebAssembly.DevServer/9.0.10": {
         "type": "package",
         "build": {
@@ -592,29 +569,6 @@
           "build/net9.0/Microsoft.AspNetCore.Components.WebAssembly.props": {}
         }
       },
-      "Microsoft.AspNetCore.Components.WebAssembly.Authentication/9.0.10": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Components.Authorization": "9.0.10",
-          "Microsoft.AspNetCore.Components.Web": "9.0.10"
-        },
-        "compile": {
-          "lib/net9.0/Microsoft.AspNetCore.Components.WebAssembly.Authentication.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net9.0/Microsoft.AspNetCore.Components.WebAssembly.Authentication.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/Microsoft.AspNetCore.Components.WebAssembly.Authentication.props": {}
-        },
-        "buildMultiTargeting": {
-          "buildMultiTargeting/Microsoft.AspNetCore.Components.WebAssembly.Authentication.props": {}
-        }
-      },
       "Microsoft.AspNetCore.Components.WebAssembly.DevServer/9.0.10": {
         "type": "package",
         "build": {
@@ -1059,27 +1013,6 @@
         "lib/net9.0/Microsoft.AspNetCore.Components.WebAssembly.xml",
         "microsoft.aspnetcore.components.webassembly.9.0.10.nupkg.sha512",
         "microsoft.aspnetcore.components.webassembly.nuspec"
-      ]
-    },
-    "Microsoft.AspNetCore.Components.WebAssembly.Authentication/9.0.10": {
-      "sha512": "AdXHHlknoLhNi1f0hgG7SgVLMvgvlPe89pH1O2CDQCyS1l4zbI+A+HatJMiYdWz9TX0FIElMyD9x7mto8vJ3RA==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.components.webassembly.authentication/9.0.10",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "THIRD-PARTY-NOTICES.txt",
-        "build/Microsoft.AspNetCore.Components.WebAssembly.Authentication.props",
-        "build/Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
-        "build/Microsoft.AspNetCore.StaticWebAssets.props",
-        "buildMultiTargeting/Microsoft.AspNetCore.Components.WebAssembly.Authentication.props",
-        "buildTransitive/Microsoft.AspNetCore.Components.WebAssembly.Authentication.props",
-        "lib/net9.0/Microsoft.AspNetCore.Components.WebAssembly.Authentication.dll",
-        "lib/net9.0/Microsoft.AspNetCore.Components.WebAssembly.Authentication.xml",
-        "microsoft.aspnetcore.components.webassembly.authentication.9.0.10.nupkg.sha512",
-        "microsoft.aspnetcore.components.webassembly.authentication.nuspec",
-        "staticwebassets/AuthenticationService.js"
       ]
     },
     "Microsoft.AspNetCore.Components.WebAssembly.DevServer/9.0.10": {
@@ -1866,8 +1799,8 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
+      "Microsoft.AspNetCore.Components.Authorization >= 9.0.10",
       "Microsoft.AspNetCore.Components.WebAssembly >= 9.0.10",
-      "Microsoft.AspNetCore.Components.WebAssembly.Authentication >= 9.0.10",
       "Microsoft.AspNetCore.Components.WebAssembly.DevServer >= 9.0.10",
       "Microsoft.NET.ILLink.Tasks >= 9.0.10",
       "Microsoft.NET.Sdk.WebAssembly.Pack >= 9.0.10"
@@ -1916,11 +1849,11 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
-          "Microsoft.AspNetCore.Components.WebAssembly": {
+          "Microsoft.AspNetCore.Components.Authorization": {
             "target": "Package",
             "version": "[9.0.10, )"
           },
-          "Microsoft.AspNetCore.Components.WebAssembly.Authentication": {
+          "Microsoft.AspNetCore.Components.WebAssembly": {
             "target": "Package",
             "version": "[9.0.10, )"
           },

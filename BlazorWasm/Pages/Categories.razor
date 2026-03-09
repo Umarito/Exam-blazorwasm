@@ -1,0 +1,18 @@
+@page "/categories"
+@inject FakeDataService DataService
+
+<PageTitle>Categories - Avrang.tj</PageTitle>
+
+<div class="container" style="padding-top: var(--space-8); padding-bottom: var(--space-8);">
+    <h1 style="margin-bottom: var(--space-6);">Product Categories</h1>
+    
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5);">
+        @foreach (var cat in DataService.Categories)
+        {
+            <div style="background-color: var(--bg-surface); padding: var(--space-5); border-radius: var(--radius-md); text-align: center;">
+                <h3 style="margin-bottom: var(--space-3);">@cat.Name</h3>
+                <a href="/" class="btn btn-outline btn-sm">View Products</a>
+            </div>
+        }
+    </div>
+</div>

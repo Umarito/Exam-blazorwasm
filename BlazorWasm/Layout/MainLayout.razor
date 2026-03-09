@@ -1,97 +1,97 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-<div class="app">
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <a href="/">ProjectAvrang</a>
+<header class="header">
+    <div class="container nav-container">
+        <div class="nav-left">
+            <a href="/" class="logo fade-in">Avrang.tj</a>
+            <button class="btn-catalog hover-lift">
+                <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                Catalog
+            </button>
+        </div>
+        
+        <div class="search-wrapper bounce-in">
+            <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" class="search-input" placeholder="Search for products, brands...">
+        </div>
+
+        <div class="nav-icons fade-in">
+            <a href="/profile" class="icon-btn hover-zoom delay-1">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Account</span>
+            </a>
+            <button class="icon-btn hover-zoom delay-2">
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span class="badge">0</span>
                 </div>
-                <nav class="nav">
-                    <a href="/" class="nav-link">Home</a>
-                    <a href="/products" class="nav-link">Products</a>
-                    <a href="/categories" class="nav-link">Categories</a>
-                    <a href="/cart" class="nav-link">Cart</a>
-                    <span class="nav-link">Welcome, Guest!</span>
-                </nav>
+                <span>Compare</span>
+            </button>
+            <a href="/favorites" class="icon-btn hover-zoom delay-3">
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </div>
+                <span>Favorites</span>
+            </a>
+            <a href="/cart" class="icon-btn hover-zoom delay-4">
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span class="badge">3</span>
+                </div>
+                <span>Cart</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main>
+    @Body
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="/" class="footer-logo">Avrang.tj</a>
+                <p style="color: var(--text-inverse-muted); max-width: 250px; font-size: 14px; margin-top: var(--space-4);">
+                    Your ultimate destination for modern, high-quality electronics and home appliances.
+                </p>
+                <div style="display: flex; gap: var(--space-3); margin-top: var(--space-4);">
+                    <button class="btn btn-outline hover-lift" style="border-color: rgba(255,255,255,0.2); color: white;">Book a demo</button>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Services</h4>
+                <ul>
+                    <li><a href="#" class="outline-hover">Health examinations</a></li>
+                    <li><a href="#" class="outline-hover">Employee surveys</a></li>
+                    <li><a href="#" class="outline-hover">Health program</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#" class="outline-hover">About us</a></li>
+                    <li><a href="#" class="outline-hover">Health place to work</a></li>
+                    <li><a href="#" class="outline-hover">FAQ</a></li>
+                    <li><a href="#" class="outline-hover">Careers</a></li>
+                    <li><a href="#" class="outline-hover">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Insights</h4>
+                <ul>
+                    <li><a href="#" class="outline-hover">All insights</a></li>
+                    <li><a href="#" class="outline-hover">Newsletter</a></li>
+                </ul>
             </div>
         </div>
-    </header>
-
-    <main class="main-content">
-        <div class="container">
-            @Body
+        <div class="footer-bottom">
+            <span>© 2023 Avrang.tj. All rights reserved.</span>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="outline-hover">Privacy Policy</a>
+                <a href="#" class="outline-hover">Terms of Service</a>
+            </div>
         </div>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 ProjectAvrang. All rights reserved.</p>
-        </div>
-    </footer>
-</div>
-
-<style>
-    .app {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .header {
-        background: #007bff;
-        color: white;
-        padding: 1rem 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logo a {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: white;
-        text-decoration: none;
-    }
-
-    .nav {
-        display: flex;
-        gap: 2rem;
-        align-items: center;
-    }
-
-    .nav-link {
-        color: white;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        transition: background-color 0.3s ease;
-    }
-
-    .nav-link:hover {
-        background-color: rgba(255,255,255,0.1);
-    }
-
-    .main-content {
-        flex: 1;
-        padding: 2rem 0;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1rem;
-    }
-
-    .footer {
-        background: #333;
-        color: white;
-        text-align: center;
-        padding: 1rem 0;
-        margin-top: auto;
-    }
-</style>
+    </div>
+</footer>

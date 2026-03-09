@@ -1,0 +1,192 @@
+.dashboard-grid[b-c5jv8dhg7d] {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-8);
+    padding: var(--space-8) 0;
+}
+
+.sidebar-nav[b-c5jv8dhg7d] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    position: sticky;
+    top: 100px;
+    height: calc(100vh - 140px);
+}
+
+.sidebar-link[b-c5jv8dhg7d] {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.sidebar-link svg[b-c5jv8dhg7d] {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+}
+
+.sidebar-link:hover[b-c5jv8dhg7d] {
+    background-color: var(--bg-surface);
+    color: var(--text-main);
+    transform: translateX(4px);
+}
+
+.sidebar-link.active[b-c5jv8dhg7d] {
+    background-color: var(--bg-surface);
+    color: var(--accent-red);
+}
+
+.dashboard-header[b-c5jv8dhg7d] {
+    margin-bottom: var(--space-6);
+}
+
+.dashboard-header h1[b-c5jv8dhg7d] {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: var(--space-1);
+}
+
+.section-card[b-c5jv8dhg7d] {
+    background: var(--bg-base);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-bottom: var(--space-6);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.section-card:hover[b-c5jv8dhg7d] {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+}
+
+.section-title[b-c5jv8dhg7d] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+}
+
+.section-title h2[b-c5jv8dhg7d] {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.view-all[b-c5jv8dhg7d] {
+    color: var(--accent-red);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transition);
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+}
+
+.view-all:hover[b-c5jv8dhg7d] {
+    background-color: rgba(192, 57, 43, 0.1);
+}
+
+.order-row[b-c5jv8dhg7d] {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-light);
+    align-items: center;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.order-row:last-child[b-c5jv8dhg7d] {
+    border-bottom: none;
+}
+
+.interactive-row:hover[b-c5jv8dhg7d] {
+    background-color: var(--bg-surface);
+    border-radius: var(--radius-md);
+    padding: 16px 12px;
+    margin: 0 -12px;
+    border-color: transparent;
+}
+
+.status-pill[b-c5jv8dhg7d] {
+    display: inline-flex;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-delivered[b-c5jv8dhg7d] {
+    background: #e6f4ea;
+    color: #1e7e34;
+}
+
+.status-processing[b-c5jv8dhg7d] {
+    background: #fff4e5;
+    color: #b7791f;
+}
+
+.horizontal-scroll[b-c5jv8dhg7d] {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+}
+
+.mini-card[b-c5jv8dhg7d] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.mini-card:hover .mini-image[b-c5jv8dhg7d] {
+    background-color: var(--border-light);
+}
+
+.mini-card:hover .mini-image-inner[b-c5jv8dhg7d] {
+    transform: scale(1.1);
+}
+
+.mini-image[b-c5jv8dhg7d] {
+    background-color: var(--bg-surface);
+    aspect-ratio: 1;
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.mini-image-inner[b-c5jv8dhg7d] {
+    width: 70%;
+    height: 70%;
+    background: white;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mini-info h4[b-c5jv8dhg7d] {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mini-price[b-c5jv8dhg7d] {
+    font-weight: 600;
+    font-size: 14px;
+}

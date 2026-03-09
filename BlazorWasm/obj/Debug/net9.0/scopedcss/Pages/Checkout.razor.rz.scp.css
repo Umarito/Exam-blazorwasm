@@ -1,0 +1,202 @@
+.checkout-steps[b-t0xd9jy56a] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-6) 0;
+    gap: var(--space-4);
+}
+
+.step[b-t0xd9jy56a] {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.step.active[b-t0xd9jy56a] {
+    color: var(--text-main);
+}
+
+.step.active .step-number[b-t0xd9jy56a] {
+    background-color: var(--accent-red);
+    color: white;
+    border-color: var(--accent-red);
+}
+
+.step-number[b-t0xd9jy56a] {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+}
+
+.step-line[b-t0xd9jy56a] {
+    width: 40px;
+    height: 1px;
+    background-color: var(--border-light);
+}
+
+.checkout-layout[b-t0xd9jy56a] {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: var(--space-8);
+    padding-bottom: var(--space-8);
+}
+
+.checkout-section[b-t0xd9jy56a] {
+    margin-bottom: var(--space-6);
+}
+
+.section-title[b-t0xd9jy56a] {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: var(--space-4);
+}
+
+.form-grid[b-t0xd9jy56a] {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+}
+
+.form-group[b-t0xd9jy56a] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.form-group.full[b-t0xd9jy56a] {
+    grid-column: span 2;
+}
+
+label[b-t0xd9jy56a] {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+input[b-t0xd9jy56a],
+select[b-t0xd9jy56a] {
+    height: 48px;
+    padding: 0 var(--space-3);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-light);
+    background-color: var(--bg-surface);
+    font-family: inherit;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+input:focus[b-t0xd9jy56a] {
+    outline: none;
+    border-color: var(--accent-red);
+    background-color: white;
+}
+
+.payment-options[b-t0xd9jy56a] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.payment-card[b-t0xd9jy56a] {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.payment-card:hover[b-t0xd9jy56a] {
+    border-color: var(--text-main);
+}
+
+.payment-card.selected[b-t0xd9jy56a] {
+    border-color: var(--accent-red);
+    background-color: rgba(192, 57, 43, 0.02);
+}
+
+.radio-circle[b-t0xd9jy56a] {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-card.selected .radio-circle[b-t0xd9jy56a] {
+    border-color: var(--accent-red);
+}
+
+.payment-card.selected .radio-circle[b-t0xd9jy56a]::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: var(--accent-red);
+    border-radius: 50%;
+}
+
+.order-summary[b-t0xd9jy56a] {
+    background-color: var(--bg-surface);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.summary-item[b-t0xd9jy56a] {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+    color: var(--text-secondary);
+}
+
+.summary-total[b-t0xd9jy56a] {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-light);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--text-main);
+}
+
+.cart-mini-item[b-t0xd9jy56a] {
+    display: flex;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.mini-img[b-t0xd9jy56a] {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: var(--radius-sm);
+}
+
+.mini-details[b-t0xd9jy56a] {
+    flex: 1;
+}
+
+.mini-name[b-t0xd9jy56a] {
+    font-weight: 500;
+    font-size: 14px;
+    display: block;
+}
+
+.mini-price[b-t0xd9jy56a] {
+    font-size: 13px;
+    color: var(--text-secondary);
+}

@@ -1,0 +1,10 @@
+  Определение проектов для восстановления...
+  Все проекты обновлены для восстановления.
+  BlazorWasm -> C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\BlazorWasm.dll
+  BlazorWasm (Blazor output) -> C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot
+
+Сборка успешно завершена.
+    Предупреждений: 0
+    Ошибок: 0
+
+Прошло времени 00:00:02.53
