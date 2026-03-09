@@ -208,8 +208,6 @@ C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\icudt_CJK.tjcz0u77k5.dat
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\icudt_EFIGS.tptq2av103.dat
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\icudt_no_CJK.lfu7j35m59.dat
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\BlazorWasm.z79mdo80eb.wasm
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\BlazorWasm.nkg782uh3r.pdb
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\blazor.boot.json
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\blazor.webassembly.js.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\Microsoft.AspNetCore.Authorization.50odlujk1g.wasm.gz
@@ -413,8 +411,6 @@ C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\icudt_CJK.tjcz0u77k5.dat.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\icudt_EFIGS.tptq2av103.dat.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\icudt_no_CJK.lfu7j35m59.dat.gz
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\BlazorWasm.z79mdo80eb.wasm.gz
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\BlazorWasm.nkg782uh3r.pdb.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\blazor.boot.json.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\BlazorWasm.staticwebassets.runtime.json
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\BlazorWasm.staticwebassets.endpoints.json
@@ -829,7 +825,6 @@ C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\scopedcss\projectbundle\BlazorWasm.bundle.scp.css
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\blazor.build.boot-extension.json
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\blazor.boot.json
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\0d4lj0n9my-km2t13bew1.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\zndshd7gle-pxap0vb9tw.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\p1skrgsd41-8j1zzmqsrf.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\j8ktfk6rq9-c2jlpeoesf.gz
@@ -879,8 +874,6 @@ C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\dcm9a0n2cp-tghr95jghx.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\zsuf7tptec-tghr95jghx.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\1ue0pxr8z2-md9yvkcqlf.gz
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\8j0fnqhb1u-kcll0ufsdd.gz
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\dbcm8yu7d1-kcll0ufsdd.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\2txtpz01pi-50odlujk1g.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\92kg3uh1r2-nxuc56wpt2.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\m13mwbm6hk-9360opbhdf.gz
@@ -1082,9 +1075,6 @@ C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\e8a0mcu2zd-tjcz0u77k5.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\e8o16sj63k-tptq2av103.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\ycgcooh5fo-lfu7j35m59.gz
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\gciyddqrjp-z79mdo80eb.gz
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\tudd5v6cch-nkg782uh3r.gz
-C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\x4wvadekql-j879zssf2t.gz
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\staticwebassets.build.json.cache
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\staticwebassets.development.json
@@ -1094,3 +1084,15 @@ C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\refint\BlazorWasm.dll
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\BlazorWasm.pdb
 C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\ref\BlazorWasm.dll
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\scopedcss\Pages\Categories.razor.rz.scp.css
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\scopedcss\Pages\Compare.razor.rz.scp.css
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\8j0fnqhb1u-164xtu270d.gz
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\dbcm8yu7d1-164xtu270d.gz
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\BlazorWasm.l5oxibefm9.wasm
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\BlazorWasm.5h9n0wt8ce.pdb
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\BlazorWasm.l5oxibefm9.wasm.gz
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\bin\Debug\net9.0\wwwroot\_framework\BlazorWasm.5h9n0wt8ce.pdb.gz
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\0d4lj0n9my-2dyxw0edsw.gz
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\gciyddqrjp-l5oxibefm9.gz
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\tudd5v6cch-5h9n0wt8ce.gz
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\obj\Debug\net9.0\compressed\x4wvadekql-pikpkqs44q.gz

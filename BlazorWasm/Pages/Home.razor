@@ -3,14 +3,16 @@
 
 <PageTitle>Avrang.tj - Modern E-Commerce</PageTitle>
 
-<section class="section hero">
+<section class="section hero fade-in-up">
     <div class="hero-content">
-        <h1>Smart living starts here.</h1>
-        <p>Discover the latest premium electronics and home appliances with unparalleled design.</p>
-        <button class="btn btn-primary">Shop Collection</button>
+        <h1 class="bounce-in delay-1">Smart living starts here.</h1>
+        <p class="fade-in delay-2">Discover the latest premium electronics and home appliances with unparalleled design.</p>
+        <button class="btn btn-primary hover-lift delay-3 fade-in">Shop Collection</button>
     </div>
     
-    <div class="hero-image-placeholder"></div> 
+    <div class="hero-image-placeholder grey-box hover-zoom bounce-in delay-2">
+        <span class="placeholder-letter" style="font-size: 120px; color: white;">A</span>
+    </div> 
 </section>
 
 @{
@@ -19,10 +21,10 @@
 
 @if (featured != null)
 {
-    <section class="section">
-        <div class="featured-product">
-            <div class="featured-image">
-                <div class="featured-image-inner"></div>
+    <section class="section stagger-stair">
+        <div class="featured-product hover-lift">
+            <div class="featured-image grey-box">
+                <span class="placeholder-letter" style="font-size: 80px; color: white;">@featured.Name.ElementAtOrDefault(0)</span>
             </div>
             <div class="featured-details">
                 <span class="badge-tag">Product of the Week</span>
@@ -79,12 +81,12 @@
         <a href="#" class="btn btn-outline btn-sm" style="border-radius: var(--radius-pill);">View All</a>
     </div>
     
-    <div class="product-grid">
+    <div class="product-grid stagger-stair">
         @foreach (var prod in DataService.Products.Where(p => p.IsTrending).Take(4))
         {
-            <div class="product-card">
-                <a href="/product/@prod.Id" class="card-image-wrapper">
-                    <div class="card-image"></div>
+            <div class="product-card hover-lift fade-in-up">
+                <a href="/product/@prod.Id" class="card-image-wrapper grey-box">
+                    <span class="placeholder-letter">@prod.Name.ElementAtOrDefault(0)</span>
                 </a>
                 <div class="card-info">
                     <span class="text-small">@prod.Category?.Name</span>
@@ -95,7 +97,7 @@
                     </div>
                     <div class="card-bottom">
                         <span class="card-price price-accent">$@prod.Price.ToString("F2")</span>
-                        <button class="btn-add">
+                        <button class="btn-add hover-lift">
                             <svg viewBox="0 0 24 24" style="width: 16px; height: 16px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         </button>
                     </div>

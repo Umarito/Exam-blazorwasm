@@ -1,0 +1,107 @@
+@page "/compare"
+@inject FakeDataService DataService
+
+<PageTitle>Compare Products - Avrang</PageTitle>
+
+<div class="compare-container fade-in-up">
+    <div class="page-header bounce-in">
+        <div>
+            <h1>Compare Products</h1>
+            <p class="text-muted">Find the right product for your needs by comparing features.</p>
+        </div>
+        <div>
+            <button class="btn btn-outline hover-lift" @onclick="ClearCompare">Clear All</button>
+        </div>
+    </div>
+
+    @if (CompareProducts == null || !CompareProducts.Any())
+    {
+        <div class="empty-state pulse-soft">
+            <div class="empty-icon-box">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            </div>
+            <h2>Nothing to compare</h2>
+            <p class="text-muted" style="max-width: 320px;">Add items to the compare list to see them side-by-side.</p>
+            <a href="/" class="btn btn-primary hover-lift mt-3">Browse Products</a>
+        </div>
+    }
+    else
+    {
+        <div class="compare-table-wrapper stagger-stair">
+            <div class="compare-row header-row">
+                <div class="compare-cell feature-label"></div>
+                @foreach (var prod in CompareProducts)
+                {
+                    <div class="compare-cell product-header">
+                        <button class="remove-btn hover-zoom" @onclick="() => RemoveProduct(prod)">
+                            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                        <div class="grey-rect-img hover-lift">
+                            <span class="img-placeholder-text">@prod.Name.ElementAtOrDefault(0)</span>
+                        </div>
+                        <div class="prod-title">@prod.Name</div>
+                        <div class="prod-price price-accent">$@prod.Price.ToString("F2")</div>
+                        <button class="btn btn-primary btn-sm hover-lift w-100 mt-2">Add to Cart</button>
+                    </div>
+                }
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-cell feature-label">Brand</div>
+                @foreach (var prod in CompareProducts)
+                {
+                    <div class="compare-cell">@(prod.Brand?.Name ?? "N/A")</div>
+                }
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-cell feature-label">Category</div>
+                @foreach (var prod in CompareProducts)
+                {
+                    <div class="compare-cell">@(prod.Category?.Name ?? "N/A")</div>
+                }
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-cell feature-label">Rating</div>
+                @foreach (var prod in CompareProducts)
+                {
+                    <div class="compare-cell">
+                        <span style="color: #f39c12; font-weight: 500;">★ @prod.AverageRating</span>
+                        <span class="text-muted text-small">(@prod.ReviewCount)</span>
+                    </div>
+                }
+            </div>
+
+            <div class="compare-row">
+                <div class="compare-cell feature-label">Description</div>
+                @foreach (var prod in CompareProducts)
+                {
+                    <div class="compare-cell text-small text-muted" style="line-height: 1.6;">
+                        @prod.Description
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Product> CompareProducts { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        // Mock data logic: take 3 random products to showcase the compare feature cleanly
+        CompareProducts = DataService.Products.Take(3).ToList();
+    }
+
+    private void RemoveProduct(Product prod)
+    {
+        CompareProducts.Remove(prod);
+    }
+
+    private void ClearCompare()
+    {
+        CompareProducts.Clear();
+    }
+}

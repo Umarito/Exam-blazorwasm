@@ -1,18 +1,165 @@
 @page "/categories"
 @inject FakeDataService DataService
 
-<PageTitle>Categories - Avrang.tj</PageTitle>
+<PageTitle>Shop by Category - Avrang</PageTitle>
 
-<div class="container" style="padding-top: var(--space-8); padding-bottom: var(--space-8);">
-    <h1 style="margin-bottom: var(--space-6);">Product Categories</h1>
-    
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5);">
-        @foreach (var cat in DataService.Categories)
+<div class="category-grid fade-in-up">
+    <aside class="category-sidebar stagger-stair">
+        <h3 class="sidebar-title">Categories</h3>
+        <div class="sidebar-nav">
+            <button class="sidebar-btn @(SelectedCategoryId == null ? "active" : "")" @onclick="() => FilterByCategory(null)">
+                All Products
+            </button>
+            @foreach (var cat in CategoryList)
+            {
+                <button class="sidebar-btn hover-lift @(SelectedCategoryId == cat.Id ? "active" : "")" @onclick="() => FilterByCategory(cat.Id)">
+                    @cat.Name
+                </button>
+            }
+        </div>
+        
+        <div style="margin-top: var(--space-6);">
+            <h3 class="sidebar-title">Brands</h3>
+            <div class="sidebar-nav">
+                <button class="sidebar-btn @(SelectedBrandId == null ? "active" : "")" @onclick="() => FilterByBrand(null)">
+                    All Brands
+                </button>
+                @foreach (var brand in Brands)
+                {
+                    <button class="sidebar-btn hover-lift @(SelectedBrandId == brand.Id ? "active" : "")" @onclick="() => FilterByBrand(brand.Id)">
+                        @brand.Name
+                    </button>
+                }
+            </div>
+        </div>
+    </aside>
+
+    <div class="category-content">
+        <div class="category-header bounce-in">
+            <h1>@CurrentViewTitle</h1>
+            <p class="text-muted">Showing @FilteredProducts.Count products</p>
+        </div>
+
+        @if (!FilteredProducts.Any())
         {
-            <div style="background-color: var(--bg-surface); padding: var(--space-5); border-radius: var(--radius-md); text-align: center;">
-                <h3 style="margin-bottom: var(--space-3);">@cat.Name</h3>
-                <a href="/" class="btn btn-outline btn-sm">View Products</a>
+            <div class="empty-state pulse-soft pt-5">
+                <div class="empty-icon-box" style="margin: 0 auto;">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </div>
+                <h2 style="margin-top:20px;">No products found</h2>
+                <p class="text-muted">Try adjusting your category or brand filters.</p>
+                <button class="btn btn-primary hover-lift mt-3" @onclick="ClearFilters">Clear Filters</button>
+            </div>
+        }
+        else
+        {
+            <div class="products-grid">
+                @foreach (var prod in FilteredProducts)
+                {
+                    <div class="product-card hover-lift fade-in-up">
+                        <a href="/product/@prod.Id" style="display: block;">
+                            <div class="product-image grey-box">
+                                <span class="placeholder-letter">@prod.Name.ElementAtOrDefault(0)</span>
+                            </div>
+                        </a>
+                        <div class="product-info">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div class="text-small text-muted mb-1">@prod.Category?.Name</div>
+                                <button class="fav-mini-btn outline-hover">
+                                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                </button>
+                            </div>
+                            <a href="/product/@prod.Id">
+                                <h3 class="card-title">@prod.Name</h3>
+                            </a>
+                            <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+                                <span class="stars" style="color:#f1c40f;">★ @prod.AverageRating</span>
+                                <span class="text-small text-muted">(@prod.ReviewCount)</span>
+                            </div>
+                            <div class="price-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                                <div>
+                                    <span class="price-accent">$@prod.Price.ToString("F2")</span>
+                                    @if(prod.OriginalPrice > prod.Price)
+                                    {
+                                        <span class="price-strike text-small" style="margin-left: 8px;">$@prod.OriginalPrice.ToString("F2")</span>
+                                    }
+                                </div>
+                                <button class="btn-primary hover-lift" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding:0;">
+                                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         }
     </div>
 </div>
+
+@code {
+    private List<Product> FilteredProducts { get; set; } = new();
+    private List<Category> CategoryList { get; set; } = new();
+    private List<Brand> Brands { get; set; } = new();
+    
+    private int? SelectedCategoryId { get; set; }
+    private int? SelectedBrandId { get; set; }
+
+    private string CurrentViewTitle
+    {
+        get
+        {
+            if (SelectedCategoryId.HasValue)
+            {
+                return CategoryList.FirstOrDefault(c => c.Id == SelectedCategoryId.Value)?.Name ?? "Category";
+            }
+            if (SelectedBrandId.HasValue)
+            {
+                return Brands.FirstOrDefault(b => b.Id == SelectedBrandId.Value)?.Name ?? "Brand";
+            }
+            return "All Products";
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        CategoryList = DataService.Categories.ToList();
+        Brands = DataService.Brands.ToList();
+        FilteredProducts = DataService.Products.ToList();
+    }
+
+    private void FilterByCategory(int? categoryId)
+    {
+        SelectedCategoryId = categoryId;
+        ApplyFilters();
+    }
+
+    private void FilterByBrand(int? brandId)
+    {
+        SelectedBrandId = brandId;
+        ApplyFilters();
+    }
+
+    private void ApplyFilters()
+    {
+        var query = DataService.Products.AsEnumerable();
+        
+        if (SelectedCategoryId.HasValue)
+        {
+            query = query.Where(p => p.CategoryId == SelectedCategoryId.Value);
+        }
+        
+        if (SelectedBrandId.HasValue)
+        {
+            query = query.Where(p => p.BrandId == SelectedBrandId.Value);
+        }
+        
+        FilteredProducts = query.ToList();
+    }
+
+    private void ClearFilters()
+    {
+        SelectedCategoryId = null;
+        SelectedBrandId = null;
+        ApplyFilters();
+    }
+}

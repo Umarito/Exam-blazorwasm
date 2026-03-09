@@ -36,10 +36,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XExvZ2luRGlzcGxheS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Categories.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2F0ZWdvcmllcy5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -64,9 +60,17 @@ build_metadata.AdditionalFiles.CssScope = b-4yk6wy4zd6
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FydC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-mrgmqpfc0j
 
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Categories.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2F0ZWdvcmllcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-zcsynbuo8t
+
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Checkout.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2hlY2tvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-t0xd9jy56a
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Compare.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcGFyZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-tejrp5h8mq
 
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Favorites.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRmF2b3JpdGVzLnJhem9y

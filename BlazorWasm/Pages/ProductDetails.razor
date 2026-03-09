@@ -19,15 +19,17 @@ else
 
     <div class="product-main">
         <div class="product-content-area">
-            <div class="gallery-container">
+            <div class="gallery-container fade-in delay-1">
                 <div class="thumbnails">
-                    <div class="thumb active"></div>
-                    <div class="thumb"></div>
-                    <div class="thumb"></div>
-                    <div class="thumb"></div>
+                    <div class="thumb active grey-box hover-zoom"><span class="placeholder-letter" style="font-size:12px;">@Product.Name.ElementAtOrDefault(0)</span></div>
+                    <div class="thumb grey-box hover-zoom"><span class="placeholder-letter" style="font-size:12px;">@Product.Name.ElementAtOrDefault(0)</span></div>
+                    <div class="thumb grey-box hover-zoom"><span class="placeholder-letter" style="font-size:12px;">@Product.Name.ElementAtOrDefault(0)</span></div>
+                    <div class="thumb grey-box hover-zoom"><span class="placeholder-letter" style="font-size:12px;">@Product.Name.ElementAtOrDefault(0)</span></div>
                 </div>
                 <div class="main-image">
-                    <div class="image-placeholder-large"></div>
+                    <div class="image-placeholder-large grey-box hover-zoom" style="width: 100%; height: 100%;">
+                        <span class="placeholder-letter" style="font-size: 160px; color: white;">@Product.Name.ElementAtOrDefault(0)</span>
+                    </div>
                 </div>
             </div>
 
@@ -99,9 +101,9 @@ else
                     </div>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-                    <button class="btn btn-primary">Add to Cart</button>
-                    <a href="/checkout" class="btn btn-outline" style="width: 100%;">Buy Now</a>
+                <div style="display: flex; flex-direction: column; gap: var(--space-3);" class="bounce-in delay-2">
+                    <button class="btn btn-primary hover-lift">Add to Cart</button>
+                    <a href="/checkout" class="btn btn-outline hover-lift" style="width: 100%;">Buy Now</a>
                 </div>
 
                 <div class="sidebar-footer">

@@ -184,6 +184,40 @@ svg {
     border-radius: var(--radius-pill);
 }
 
+/* --- Global Grey Placeholder --- */
+.grey-box {
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.grey-box::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+}
+
+.hover-zoom:hover .grey-box::after,
+.hover-lift:hover .grey-box::after,
+.product-card:hover .grey-box::after {
+    left: 100%;
+}
+
+.placeholder-letter {
+    font-size: 64px;
+    font-weight: 800;
+    color: #cecece;
+    font-family: var(--font-sans);
+}
+
 /* --- Entrance Animations --- */
 .fade-in {
     animation: fadeIn 0.4s ease forwards;

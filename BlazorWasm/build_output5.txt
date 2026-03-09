@@ -1,0 +1,11 @@
+  Определение проектов для восстановления...
+  Все проекты обновлены для восстановления.
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\Pages\Categories.razor(101,28): error CS0542: "Categories": имена членов не могут совпадать с именами типов, в которых они содержатся [C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\BlazorWasm.csproj]
+
+Ошибка сборки.
+
+C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\Pages\Categories.razor(101,28): error CS0542: "Categories": имена членов не могут совпадать с именами типов, в которых они содержатся [C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\BlazorWasm\BlazorWasm.csproj]
+    Предупреждений: 0
+    Ошибок: 1
+
+Прошло времени 00:00:02.11
