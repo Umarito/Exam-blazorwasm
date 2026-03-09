@@ -1,0 +1,384 @@
+@page "/login"
+@using BlazorWasm.Models
+@using BlazorWasm.Services
+@inject AuthService AuthService
+@inject NavigationManager Nav
+@inject JwtAuthenticationStateProvider AuthProvider
+
+<PageTitle>Login & Register | Avrang.tj</PageTitle>
+
+<style>
+    .auth-container {
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        background: white;
+    }
+
+    .auth-form-side {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 48px 64px;
+        max-width: 600px;
+        justify-content: center;
+        background: white;
+    }
+
+    .auth-header {
+        position: absolute;
+        top: 48px;
+        left: 64px;
+    }
+
+    .logo-link {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: #e63946;
+        text-decoration: none;
+    }
+
+    .form-wrapper {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .form-wrapper h1 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.02em;
+        color: #1a1a2e;
+    }
+
+    .form-wrapper p {
+        color: #8d99ae;
+        margin-bottom: 32px;
+    }
+
+    .input-group {
+        margin-bottom: 24px;
+    }
+
+    .input-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #2b2d42;
+    }
+
+    .input-field {
+        width: 100%;
+        height: 48px;
+        background-color: #f8f9fa;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 0 16px;
+        font-family: inherit;
+        font-size: 15px;
+        transition: all 0.2s ease;
+    }
+
+    .input-field:focus {
+        outline: none;
+        border-color: #e63946;
+        background-color: white;
+        box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.1);
+    }
+
+    .form-utils {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+        font-size: 14px;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        color: #8d99ae;
+    }
+
+    .forgot-pass {
+        color: #e63946;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .btn-submit {
+        width: 100%;
+        height: 52px;
+        background-color: #e63946;
+        color: white;
+        border: none;
+        border-radius: 9999px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: #8d99ae;
+        font-size: 13px;
+        margin: 24px 0;
+    }
+
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #edf2f4;
+    }
+
+    .divider:not(:empty)::before { margin-right: 16px; }
+    .divider:not(:empty)::after { margin-left: 16px; }
+
+    .social-btn {
+        width: 100%;
+        height: 48px;
+        border: 1px solid #edf2f4;
+        border-radius: 9999px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .social-btn:hover {
+        background-color: #f8f9fa;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 32px;
+        font-size: 14px;
+        color: #8d99ae;
+    }
+
+    .register-link a {
+        color: #e63946;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .auth-banner-side {
+        flex: 1.2;
+        background-color: #1a1a2e;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        color: white;
+    }
+
+    .banner-bg-circle {
+        position: absolute;
+        width: 800px;
+        height: 800px;
+        background-color: rgba(230, 57, 70, 0.1);
+        border-radius: 50%;
+        right: -200px;
+        top: -100px;
+    }
+
+    .banner-content {
+        position: relative;
+        z-index: 2;
+        padding: 64px;
+        max-width: 540px;
+    }
+
+    .banner-content h2 {
+        font-size: 48px;
+        line-height: 1.1;
+        margin-bottom: 24px;
+        font-weight: 800;
+    }
+
+    .banner-content p {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 48px;
+    }
+
+    .trust-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .pill {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 8px 16px;
+        border-radius: 9999px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .pill svg {
+        width: 14px;
+        height: 14px;
+        stroke: #e63946;
+    }
+
+    .alert-danger {
+        background: #fff1f2;
+        color: #e63946;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid rgba(230, 57, 70, 0.1);
+    }
+
+    @@media (max-width: 992px) {
+        .auth-banner-side { display: none; }
+        .auth-form-side { max-width: 100%; }
+    }
+</style>
+
+<div class="auth-container">
+    <div class="auth-form-side">
+        <header class="auth-header">
+            <a href="/" class="logo-link">Avrang.tj</a>
+        </header>
+
+        <div class="form-wrapper">
+            <h1>Welcome back</h1>
+            <p>Enter your credentials to access your account</p>
+
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="alert-danger">@_errorMessage</div>
+            }
+
+            <EditForm Model="@_model" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
+                
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <InputText @bind-Value="_model.Email" class="input-field" placeholder="name@example.com" type="email" />
+                    <ValidationMessage For="@(() => _model.Email)" />
+                </div>
+                
+                <div class="input-group">
+                    <label>Password</label>
+                    <InputText @bind-Value="_model.Password" class="input-field" placeholder="••••••••" type="password" />
+                    <ValidationMessage For="@(() => _model.Password)" />
+                </div>
+
+                <div class="form-utils">
+                    <label class="checkbox-label">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="javascript:void(0)" class="forgot-pass">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-submit" disabled="@_isLoading">
+                    @if (_isLoading) {
+                        <span>Signing In...</span>
+                    } else {
+                        <span>Sign In</span>
+                    }
+                </button>
+                
+                <div class="divider">or continue with</div>
+
+                <button type="button" class="social-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    Facebook
+                </button>
+            </EditForm>
+
+            <div class="register-link">
+                Don't have an account? <a href="/register">Create an account</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-banner-side">
+        <div class="banner-bg-circle"></div>
+        
+        <div class="banner-content">
+            <h2>Experience smart living like never before.</h2>
+            <p>Join thousands of satisfied customers and get access to exclusive deals, early product launches, and seamless shopping experiences.</p>
+            
+            <div class="trust-pills">
+                <div class="pill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    Secure access
+                </div>
+                <div class="pill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    24/7 Support
+                </div>
+                <div class="pill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Loyalty rewards
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel _model = new();
+    private string? _errorMessage;
+    private bool _isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var isAuth = await AuthProvider.IsAuthenticatedAsync();
+        if (isAuth) Nav.NavigateTo("/", true);
+    }
+
+    private async Task HandleLogin()
+    {
+        _isLoading = true;
+        _errorMessage = null;
+        var (success, error) = await AuthService.LoginAsync(_model);
+        if (success)
+            Nav.NavigateTo("/", true); // Force reload to trigger auth state updates
+        else
+            _errorMessage = error ?? "Login failed. Please check your credentials.";
+        _isLoading = false;
+    }
+}

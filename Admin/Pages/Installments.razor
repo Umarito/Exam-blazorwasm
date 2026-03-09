@@ -1,0 +1,73 @@
+@page "/installments"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+
+<PageTitle>Manage Installments - Avrang Admin</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Installment Plans</h1>
+        <div class="card p-3 d-flex flex-row gap-2 align-items-center">
+            <input type="number" class="form-control" placeholder="Months" @bind="_newMonths" style="width: 100px;" />
+            <input type="number" class="form-control" placeholder="Interest Rate %" @bind="_newRate" style="width: 150px;" />
+            <button class="btn btn-success" @onclick="AddPlan">Add Plan</button>
+        </div>
+    </div>
+
+    @if (_plans == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var plan in _plans)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">@plan.MonthCount Months</h5>
+                            <p class="card-text text-muted">Rate: @plan.InterestRate%</p>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeletePlan(plan.Id)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<Installment>? _plans;
+    private int _newMonths;
+    private decimal _newRate;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _plans = await Api.GetInstallmentsAsync();
+    }
+
+    private async Task AddPlan()
+    {
+        if (_newMonths <= 0) return;
+        
+        var success = await Api.CreateInstallmentAsync(new Installment { MonthCount = _newMonths, InterestRate = _newRate });
+        if (success)
+        {
+            _newMonths = 0;
+            _newRate = 0;
+            await LoadData();
+        }
+    }
+
+    private async Task DeletePlan(int id)
+    {
+        if (await Api.DeleteInstallmentAsync(id)) await LoadData();
+    }
+}

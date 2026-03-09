@@ -179,12 +179,13 @@ try
     if (!context.Categories.Any())
     {
         context.Categories.AddRange(
-            new Category { Name = "Electronics", Slug = "electronics", Description = "Electronic devices and gadgets" },
-            new Category { Name = "Clothing", Slug = "clothing", Description = "Fashion and apparel" },
-            new Category { Name = "Home & Garden", Slug = "home-garden", Description = "Home improvement and garden supplies" }
+            new Category { Name = "Smartphones", Slug = "smartphones", Description = "Latest mobile devices" },
+            new Category { Name = "Laptops", Slug = "laptops", Description = "Powerful portable computers" },
+            new Category { Name = "Home Appliances", Slug = "home-appliances", Description = "Smart solutions for your home" },
+            new Category { Name = "Audio", Slug = "audio", Description = "Premium sound equipment" },
+            new Category { Name = "Wearables", Slug = "wearables", Description = "Smart watches and trackers" }
         );
         await context.SaveChangesAsync();
-        app.Logger.LogInformation("Seeded categories");
     }
 
     if (!context.Brands.Any())
@@ -192,83 +193,43 @@ try
         context.Brands.AddRange(
             new Brand { Name = "Apple", Slug = "apple" },
             new Brand { Name = "Samsung", Slug = "samsung" },
-            new Brand { Name = "Nike", Slug = "nike" },
-            new Brand { Name = "Adidas", Slug = "adidas" }
+            new Brand { Name = "Sony", Slug = "sony" },
+            new Brand { Name = "Dell", Slug = "dell" },
+            new Brand { Name = "Bose", Slug = "bose" }
         );
         await context.SaveChangesAsync();
-        app.Logger.LogInformation("Seeded brands");
     }
 
     if (!context.Products.Any())
     {
-        var electronics = context.Categories.First(c => c.Name == "Electronics");
-        var clothing = context.Categories.First(c => c.Name == "Clothing");
-        var apple = context.Brands.First(b => b.Name == "Apple");
-        var samsung = context.Brands.First(b => b.Name == "Samsung");
-        var nike = context.Brands.First(b => b.Name == "Nike");
+        var smartphones = context.Categories.First(c => c.Slug == "smartphones");
+        var laptops = context.Categories.First(c => c.Slug == "laptops");
+        var appliances = context.Categories.First(c => c.Slug == "home-appliances");
+        var audio = context.Categories.First(c => c.Slug == "audio");
+        
+        var apple = context.Brands.First(b => b.Slug == "apple");
+        var samsung = context.Brands.First(b => b.Slug == "samsung");
+        var sony = context.Brands.First(b => b.Slug == "sony");
+        var dell = context.Brands.First(b => b.Slug == "dell");
+        var bose = context.Brands.First(b => b.Slug == "bose");
 
         context.Products.AddRange(
-            new Product
-            {
-                Name = "iPhone 15 Pro",
-                Description = "Latest iPhone with advanced features",
-                Price = 999,
-                OldPrice = 1099,
-                StockQuantity = 50,
-                CategoryId = electronics.Id,
-                BrandId = apple.Id
-            },
-            new Product
-            {
-                Name = "Samsung Galaxy S24",
-                Description = "Powerful Android smartphone",
-                Price = 799,
-                OldPrice = 899,
-                StockQuantity = 30,
-                CategoryId = electronics.Id,
-                BrandId = samsung.Id
-            },
-            new Product
-            {
-                Name = "Nike Air Max",
-                Description = "Comfortable running shoes",
-                Price = 120,
-                OldPrice = 150,
-                StockQuantity = 100,
-                CategoryId = clothing.Id,
-                BrandId = nike.Id
-            },
-            new Product
-            {
-                Name = "iPad Air",
-                Description = "Versatile tablet for work and play",
-                Price = 599,
-                OldPrice = 649,
-                StockQuantity = 20,
-                CategoryId = electronics.Id,
-                BrandId = apple.Id
-            },
-            new Product
-            {
-                Name = "MacBook Pro 14\"",
-                Description = "High-performance laptop",
-                Price = 1999,
-                OldPrice = 2199,
-                StockQuantity = 10,
-                CategoryId = electronics.Id,
-                BrandId = apple.Id
-            }
+            new Product { Name = "iPhone 15 Pro Max", Description = "The ultimate iPhone with Titanium design.", Price = 1199, OldPrice = 1299, StockQuantity = 25, CategoryId = smartphones.Id, BrandId = apple.Id, ImageUrl = "https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&q=80&w=800", IsFeatured = true },
+            new Product { Name = "Samsung Galaxy S24 Ultra", Description = "AI-powered smartphone with 200MP camera.", Price = 1299, OldPrice = 1399, StockQuantity = 30, CategoryId = smartphones.Id, BrandId = samsung.Id, ImageUrl = "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&q=80&w=800", IsFeatured = true },
+            new Product { Name = "MacBook Air M3", Description = "Thinner, lighter, and faster with M3 chip.", Price = 1099, OldPrice = 1199, StockQuantity = 15, CategoryId = laptops.Id, BrandId = apple.Id, ImageUrl = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800", IsFeatured = true },
+            new Product { Name = "Dell XPS 15", Description = "Stunning display and incredible performance.", Price = 1899, OldPrice = 2099, StockQuantity = 10, CategoryId = laptops.Id, BrandId = dell.Id, ImageUrl = "https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?auto=format&fit=crop&q=80&w=800", IsFeatured = false },
+            new Product { Name = "Sony WH-1000XM5", Description = "Industry-leading noise canceling headphones.", Price = 399, OldPrice = 449, StockQuantity = 40, CategoryId = audio.Id, BrandId = sony.Id, ImageUrl = "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=800", IsFeatured = true },
+            new Product { Name = "Bose QuietComfort Ultra", Description = "World-class quiet and spatial audio.", Price = 429, OldPrice = 479, StockQuantity = 20, CategoryId = audio.Id, BrandId = bose.Id, ImageUrl = "https://images.unsplash.com/photo-1546435770-a3e426ff472b?auto=format&fit=crop&q=80&w=800", IsFeatured = false },
+            new Product { Name = "Samsung Bespoke AI Fridge", Description = "Smart refrigerator with custom panels.", Price = 2499, OldPrice = 2799, StockQuantity = 5, CategoryId = appliances.Id, BrandId = samsung.Id, ImageUrl = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800", IsFeatured = true },
+            new Product { Name = "Sony PlayStation 5", Description = "The next generation of gaming.", Price = 499, OldPrice = 549, StockQuantity = 100, CategoryId = audio.Id, BrandId = sony.Id, ImageUrl = "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=800", IsFeatured = true }
         );
         await context.SaveChangesAsync();
-        app.Logger.LogInformation("Seeded products");
     }
-
-    app.Logger.LogInformation("Finished Seeding Default Data");
-    app.Logger.LogInformation("Application Starting");
+    app.Logger.LogInformation("Finished Seeding Enhanced Data");
 }
 catch (Exception ex)
 {
-    app.Logger.LogError("An Error occurred while seeding the db:  {ExMessage}", ex.Message);
+    app.Logger.LogError("An error occurred while seeding the db: {ExMessage}", ex.Message);
 }
 
 

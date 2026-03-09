@@ -1,9 +1,17 @@
 @page "/favorites"
-@inject FakeDataService DataService
+@inject WishlistService WishlistService
+@inject CartStateService CartState
+@inject NavigationManager Nav
 
 <PageTitle>Favorites - Avrang.tj</PageTitle>
 
-@if (FavoriteProducts == null || !FavoriteProducts.Any())
+@if (!_initialized)
+{
+    <div style="text-align:center;padding:60px 0;">
+        <div class="loading-spinner"></div>
+    </div>
+}
+else if (!WishlistService.Items.Any())
 {
     <div id="favorites-empty" class="fade-in">
         <div class="empty-state">
@@ -22,36 +30,35 @@ else
         <div class="page-header bounce-in">
             <div>
                 <h1>Your Favorites</h1>
-                <p class="text-muted">@FavoriteProducts.Count items saved to your wishlist</p>
+                <p class="text-muted">@WishlistService.Count items saved to your wishlist</p>
             </div>
             <div style="display: flex; gap: var(--space-3);">
-                <button class="btn btn-outline outline-hover">
-                    <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                    Share List
-                </button>
-                <button class="btn btn-primary hover-lift">Add All to Cart</button>
+                <button class="btn btn-primary hover-lift" @onclick="AddAllToCart">Add All to Cart</button>
             </div>
         </div>
 
         <div class="favorites-grid">
-            @foreach (var prod in FavoriteProducts)
+            @foreach (var prod in WishlistService.Items.ToList())
             {
                 <div class="fav-card fade-in-up">
                     <div class="fav-image-wrapper fav-hover">
-                        <button class="remove-btn" title="Remove from favorites" @onclick="() => RemoveFavorite(prod)">
+                        <button class="remove-btn" title="Remove from favorites" @onclick="() => RemoveFavorite(prod.Id)">
                             <svg viewBox="0 0 24 24" style="width: 16px; height: 16px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </button>
                         <div class="fav-image">
-                            <!-- Image placed here -->
+                            <img src="@GetProductImage(prod)" alt="@prod.Name"
+                                 style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg);" />
                         </div>
                     </div>
                     <div class="fav-info">
                         <span class="text-small">@prod.Category?.Name</span>
                         <h3 class="card-title">@prod.Name</h3>
-                        <span class="fav-price @(prod.IsTrending ? "price-accent" : "")">$@prod.Price.ToString("F2")</span>
+                        <span class="fav-price price-accent">$@prod.Price.ToString("F2")</span>
                     </div>
                     <div class="fav-actions">
-                        <button class="btn btn-primary btn-sm hover-lift" style="flex:1;">Move to Cart</button>
+                        <button class="btn btn-primary btn-sm hover-lift" style="flex:1;"
+                                @onclick="() => MoveToCart(prod)">Move to Cart</button>
+                        <a href="/product/@prod.Id" class="btn btn-outline btn-sm hover-lift">View</a>
                     </div>
                 </div>
             }
@@ -60,16 +67,55 @@ else
 }
 
 @code {
-    private List<Product> FavoriteProducts { get; set; } = new();
+    private bool _initialized;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Mock favorites fetching 4 random products from FakeDataService
-        FavoriteProducts = DataService.Products.Take(4).ToList();
+        await WishlistService.InitializeAsync();
+        WishlistService.OnChanged += StateHasChanged;
+        _initialized = true;
     }
 
-    private void RemoveFavorite(Product prod)
+    private async Task RemoveFavorite(int productId)
     {
-        FavoriteProducts.Remove(prod);
+        await WishlistService.RemoveAsync(productId);
     }
+
+    private async Task MoveToCart(Product p)
+    {
+        CartState.AddToCart(p);
+        await WishlistService.RemoveAsync(p.Id);
+    }
+
+    private void AddAllToCart()
+    {
+        foreach (var p in WishlistService.Items.ToList())
+            CartState.AddToCart(p);
+    }
+
+    private static readonly Dictionary<string, string> _imageMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["iphone"] = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80",
+        ["samsung"] = "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&q=80",
+        ["macbook"] = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&q=80",
+        ["ipad"] = "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80",
+        ["headphone"] = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80",
+        ["watch"] = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80",
+        ["nike"] = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80",
+        ["camera"] = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=80",
+    };
+    private static readonly string[] _fallback = {
+        "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&q=80",
+        "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80",
+    };
+
+    private string GetProductImage(Product p)
+    {
+        if (!string.IsNullOrEmpty(p.ImageUrl)) return p.ImageUrl;
+        var name = p.Name.ToLower();
+        foreach (var kv in _imageMap) if (name.Contains(kv.Key)) return kv.Value;
+        return _fallback[Math.Abs(p.Id) % _fallback.Length];
+    }
+
+    public void Dispose() => WishlistService.OnChanged -= StateHasChanged;
 }

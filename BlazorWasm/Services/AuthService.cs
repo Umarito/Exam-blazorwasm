@@ -1,4 +1,6 @@
 using System.Net.Http.Json;
+using System.Text.Json;
+using BlazorWasm.Auth;
 using BlazorWasm.Models;
 using Microsoft.JSInterop;
 
@@ -8,64 +10,86 @@ public class AuthService
 {
     private readonly HttpClient _httpClient;
     private readonly IJSRuntime _jsRuntime;
+    private readonly JwtAuthenticationStateProvider _authStateProvider;
 
-    public AuthService(HttpClient httpClient, IJSRuntime jsRuntime)
+    public AuthService(HttpClient httpClient, IJSRuntime jsRuntime, JwtAuthenticationStateProvider authStateProvider)
     {
         _httpClient = httpClient;
         _jsRuntime = jsRuntime;
+        _authStateProvider = authStateProvider;
     }
 
-    public async Task<bool> LoginAsync(LoginModel model)
+    public async Task<(bool Success, string? Error)> LoginAsync(LoginModel model)
     {
-        var response = await _httpClient.PostAsJsonAsync("auth/login", model);
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var result = await response.Content.ReadFromJsonAsync<AuthResponse>();
-            if (result?.Data?.Token != null)
+            var response = await _httpClient.PostAsJsonAsync("auth/login", model);
+            if (response.IsSuccessStatusCode)
             {
-                await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", result.Data.Token);
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.Data.Token);
-                return true;
+                var json = await response.Content.ReadAsStringAsync();
+                var doc = JsonDocument.Parse(json);
+                var token = doc.RootElement.TryGetProperty("token", out var t) ? t.GetString() : null;
+                if (!string.IsNullOrEmpty(token))
+                {
+                    await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", token);
+                    _httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    _authStateProvider.NotifyAuthStateChanged();
+                    return (true, null);
+                }
             }
+            var errJson = await response.Content.ReadAsStringAsync();
+            return (false, string.IsNullOrEmpty(errJson) ? "Invalid credentials" : errJson);
         }
-        return false;
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
     }
 
-    public async Task<bool> RegisterAsync(RegisterModel model)
+    public async Task<(bool Success, string? Error)> RegisterAsync(RegisterModel model)
     {
-        var response = await _httpClient.PostAsJsonAsync("auth/register", model);
-        return response.IsSuccessStatusCode;
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync("auth/register", model);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var doc = JsonDocument.Parse(json);
+                var token = doc.RootElement.TryGetProperty("token", out var t) ? t.GetString() : null;
+                if (!string.IsNullOrEmpty(token))
+                {
+                    await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", token);
+                    _httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    _authStateProvider.NotifyAuthStateChanged();
+                    return (true, null);
+                }
+                return (true, null);
+            }
+            var errContent = await response.Content.ReadAsStringAsync();
+            return (false, errContent);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
     }
 
     public async Task LogoutAsync()
     {
         await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "authToken");
         _httpClient.DefaultRequestHeaders.Authorization = null;
-    }
-
-    public async Task<string?> GetTokenAsync()
-    {
-        return await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", "authToken");
+        _authStateProvider.NotifyAuthStateChanged();
     }
 
     public async Task InitializeAsync()
     {
-        var token = await GetTokenAsync();
+        var token = await _jsRuntime.InvokeAsync<string?>("localStorage.getItem", "authToken");
         if (!string.IsNullOrEmpty(token))
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         }
     }
-}
-
-public class AuthResponse
-{
-    public int StatusCode { get; set; }
-    public List<string> Description { get; set; } = new();
-    public AuthData? Data { get; set; }
-}
-
-public class AuthData
-{
-    public string Token { get; set; } = null!;
 }

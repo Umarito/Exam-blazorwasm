@@ -1,0 +1,162 @@
+@page "/products"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+@inject NavigationManager Nav
+
+<PageTitle>Manage Products - Avrang Admin</PageTitle>
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Products</h1>
+        <button class="btn btn-success" @onclick="OpenAddModal">Add New Product</button>
+    </div>
+
+    @if (_products == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in _products)
+                {
+                    <tr>
+                        <td>@p.Id</td>
+                        <td><img src="@p.ImageUrl" style="width:50px; height:50px; object-fit:cover;" /></td>
+                        <td>@p.Name</td>
+                        <td>$@p.Price.ToString("F2")</td>
+                        <td>@p.Category?.Name</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => EditProduct(p)">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteProduct(p.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@if (_showModal)
+{
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(_isEdit ? "Edit Product" : "Add Product")</h5>
+                    <button type="button" class="btn-close" @onclick="() => _showModal = false"></button>
+                </div>
+                <EditForm Model="@_editingProduct" OnValidSubmit="SaveProduct">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Name</label>
+                            <InputText @bind-Value="_editingProduct.Name" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label>Description</label>
+                            <InputTextArea @bind-Value="_editingProduct.Description" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Price</label>
+                            <InputNumber @bind-Value="_editingProduct.Price" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Image URL</label>
+                            <InputText @bind-Value="_editingProduct.ImageUrl" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Category</label>
+                            <select class="form-control" @bind="_editingProduct.CategoryId">
+                                <option value="">Select Category</option>
+                                @foreach (var cat in _categories)
+                                {
+                                    <option value="@cat.Id">@cat.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-check mb-3">
+                            <InputCheckbox @bind-Value="_editingProduct.IsFeatured" class="form-check-input" id="feat" />
+                            <label class="form-check-label" for="feat">Is Featured</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="() => _showModal = false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Product>? _products;
+    private List<Category> _categories = new();
+    private bool _showModal;
+    private bool _isEdit;
+    private Product _editingProduct = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _products = await Api.GetProductsAsync();
+        _categories = await Api.GetCategoriesAsync();
+    }
+
+    private void OpenAddModal()
+    {
+        _isEdit = false;
+        _editingProduct = new Product();
+        _showModal = true;
+    }
+
+    private void EditProduct(Product p)
+    {
+        _isEdit = true;
+        _editingProduct = new Product // clone
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Description,
+            Price = p.Price,
+            ImageUrl = p.ImageUrl,
+            CategoryId = p.CategoryId,
+            IsFeatured = p.IsFeatured
+        };
+        _showModal = true;
+    }
+
+    private async Task SaveProduct()
+    {
+        bool success;
+        if (_isEdit) success = await Api.UpdateProductAsync(_editingProduct);
+        else success = await Api.CreateProductAsync(_editingProduct);
+
+        if (success)
+        {
+            _showModal = false;
+            await LoadData();
+        }
+    }
+
+    private async Task DeleteProduct(int id)
+    {
+        if (await Api.DeleteProductAsync(id)) await LoadData();
+    }
+}

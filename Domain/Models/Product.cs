@@ -10,6 +10,8 @@ public class Product : BaseEntity
     public int BrandId{get;set;}
     public Brand? Brand{get;set;}
     public bool IsActive{get;set;}=true;
+    public bool IsFeatured{get;set;}=false;
+    public string? ImageUrl{get;set;}
     public List<ProductImage> Images{get;set;}=new();
     public List<CartItem> CartItems{get;set;}=new();
     public List<OrderItem> OrderItems{get;set;}=new();

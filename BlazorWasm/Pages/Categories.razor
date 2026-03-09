@@ -1,5 +1,8 @@
 @page "/categories"
-@inject FakeDataService DataService
+@inject ProductApiService ProductService
+@inject WishlistService WishlistService
+@inject CartStateService CartState
+@inject NavigationManager Nav
 
 <PageTitle>Shop by Category - Avrang</PageTitle>
 
@@ -19,17 +22,11 @@
         </div>
         
         <div style="margin-top: var(--space-6);">
-            <h3 class="sidebar-title">Brands</h3>
+            <h3 class="sidebar-title">Sort By</h3>
             <div class="sidebar-nav">
-                <button class="sidebar-btn @(SelectedBrandId == null ? "active" : "")" @onclick="() => FilterByBrand(null)">
-                    All Brands
-                </button>
-                @foreach (var brand in Brands)
-                {
-                    <button class="sidebar-btn hover-lift @(SelectedBrandId == brand.Id ? "active" : "")" @onclick="() => FilterByBrand(brand.Id)">
-                        @brand.Name
-                    </button>
-                }
+                <button class="sidebar-btn @(SortBy == "newest" ? "active" : "")" @onclick='() => SetSort("newest")'>Newest Arrivals</button>
+                <button class="sidebar-btn @(SortBy == "price_low" ? "active" : "")" @onclick='() => SetSort("price_low")'>Price: Low to High</button>
+                <button class="sidebar-btn @(SortBy == "price_high" ? "active" : "")" @onclick='() => SetSort("price_high")'>Price: High to Low</button>
             </div>
         </div>
     </aside>
@@ -40,14 +37,21 @@
             <p class="text-muted">Showing @FilteredProducts.Count products</p>
         </div>
 
-        @if (!FilteredProducts.Any())
+        @if (_isLoading)
+        {
+            <div class="section" style="text-align:center; padding: 60px 0;">
+                <div class="loading-spinner"></div>
+                <p class="text-muted" style="margin-top:16px;">Loading products...</p>
+            </div>
+        }
+        else if (!FilteredProducts.Any())
         {
             <div class="empty-state pulse-soft pt-5">
                 <div class="empty-icon-box" style="margin: 0 auto;">
                     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </div>
                 <h2 style="margin-top:20px;">No products found</h2>
-                <p class="text-muted">Try adjusting your category or brand filters.</p>
+                <p class="text-muted">Try adjusting your category filters.</p>
                 <button class="btn btn-primary hover-lift mt-3" @onclick="ClearFilters">Clear Filters</button>
             </div>
         }
@@ -58,14 +62,14 @@
                 {
                     <div class="product-card hover-lift fade-in-up">
                         <a href="/product/@prod.Id" style="display: block;">
-                            <div class="product-image grey-box">
-                                <span class="placeholder-letter">@prod.Name.ElementAtOrDefault(0)</span>
+                            <div class="product-image">
+                                <img src="@GetProductImage(prod)" alt="@prod.Name" style="width:100%; height:100%; object-fit:cover; border-radius: var(--radius-lg);" />
                             </div>
                         </a>
                         <div class="product-info">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                                 <div class="text-small text-muted mb-1">@prod.Category?.Name</div>
-                                <button class="fav-mini-btn outline-hover">
+                                <button class="fav-mini-btn outline-hover @(WishlistService.IsInWishlist(prod.Id) ? "active-wish" : "")" @onclick="() => ToggleWishlist(prod)">
                                     <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                                 </button>
                             </div>
@@ -84,8 +88,8 @@
                                         <span class="price-strike text-small" style="margin-left: 8px;">$@prod.OriginalPrice.ToString("F2")</span>
                                     }
                                 </div>
-                                <button class="btn-primary hover-lift" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding:0;">
-                                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <button class="btn-primary hover-lift" @onclick="() => CartState.AddToCart(prod)" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding:0;">
+                                    <svg viewBox="0 0 24 24" style="width:20px;height:20px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                                 </button>
                             </div>
                         </div>
@@ -97,34 +101,31 @@
 </div>
 
 @code {
+    private List<Product> _allProducts = new();
     private List<Product> FilteredProducts { get; set; } = new();
     private List<Category> CategoryList { get; set; } = new();
-    private List<Brand> Brands { get; set; } = new();
     
     private int? SelectedCategoryId { get; set; }
-    private int? SelectedBrandId { get; set; }
+    private string SortBy { get; set; } = "newest";
+    private bool _isLoading = true;
 
-    private string CurrentViewTitle
+    private string CurrentViewTitle => 
+        SelectedCategoryId.HasValue 
+        ? CategoryList.FirstOrDefault(c => c.Id == SelectedCategoryId.Value)?.Name ?? "Category" 
+        : "All Products";
+
+    protected override async Task OnInitializedAsync()
     {
-        get
-        {
-            if (SelectedCategoryId.HasValue)
-            {
-                return CategoryList.FirstOrDefault(c => c.Id == SelectedCategoryId.Value)?.Name ?? "Category";
-            }
-            if (SelectedBrandId.HasValue)
-            {
-                return Brands.FirstOrDefault(b => b.Id == SelectedBrandId.Value)?.Name ?? "Brand";
-            }
-            return "All Products";
-        }
+        await LoadData();
     }
 
-    protected override void OnInitialized()
+    private async Task LoadData()
     {
-        CategoryList = DataService.Categories.ToList();
-        Brands = DataService.Brands.ToList();
-        FilteredProducts = DataService.Products.ToList();
+        _isLoading = true;
+        CategoryList = await ProductService.GetCategoriesAsync();
+        _allProducts = await ProductService.GetProductsAsync(1, 100);
+        ApplyFilters();
+        _isLoading = false;
     }
 
     private void FilterByCategory(int? categoryId)
@@ -133,25 +134,27 @@
         ApplyFilters();
     }
 
-    private void FilterByBrand(int? brandId)
+    private void SetSort(string sort)
     {
-        SelectedBrandId = brandId;
+        SortBy = sort;
         ApplyFilters();
     }
 
     private void ApplyFilters()
     {
-        var query = DataService.Products.AsEnumerable();
+        var query = _allProducts.AsEnumerable();
         
         if (SelectedCategoryId.HasValue)
         {
             query = query.Where(p => p.CategoryId == SelectedCategoryId.Value);
         }
-        
-        if (SelectedBrandId.HasValue)
+
+        query = SortBy switch
         {
-            query = query.Where(p => p.BrandId == SelectedBrandId.Value);
-        }
+            "price_low" => query.OrderBy(p => p.Price),
+            "price_high" => query.OrderByDescending(p => p.Price),
+            _ => query.OrderByDescending(p => p.Id)
+        };
         
         FilteredProducts = query.ToList();
     }
@@ -159,7 +162,42 @@
     private void ClearFilters()
     {
         SelectedCategoryId = null;
-        SelectedBrandId = null;
+        SortBy = "newest";
         ApplyFilters();
+    }
+
+    private async Task ToggleWishlist(Product p) => await WishlistService.ToggleAsync(p);
+
+    private static readonly Dictionary<string, string> _imageMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["iphone"] = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80",
+        ["samsung"] = "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&q=80",
+        ["macbook"] = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&q=80",
+        ["ipad"] = "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80",
+        ["headphone"] = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80",
+        ["watch"] = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80",
+        ["camera"] = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=80",
+        ["coffee"] = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80",
+        ["earbuds"] = "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&q=80",
+        ["nike"] = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80",
+        ["laptop"] = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=80",
+        ["speaker"] = "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80",
+    };
+
+    private static readonly string[] _fallbackImages = {
+        "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&q=80",
+        "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80",
+        "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80",
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80",
+        "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&q=80",
+    };
+
+    private string GetProductImage(Product p)
+    {
+        if (!string.IsNullOrEmpty(p.ImageUrl)) return p.ImageUrl;
+        var name = p.Name.ToLower();
+        foreach (var kv in _imageMap)
+            if (name.Contains(kv.Key)) return kv.Value;
+        return _fallbackImages[Math.Abs(p.Id) % _fallbackImages.Length];
     }
 }

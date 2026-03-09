@@ -1,19 +1,25 @@
 @page "/product/{id:int}"
-@inject FakeDataService DataService
+@inject ProductApiService ProductService
+@inject WishlistService WishlistService
+@inject CartStateService CartState
+@inject CompareStateService CompareState
+@inject InstallmentApiService InstallmentService
 
-<PageTitle>@(Product?.Name ?? "Product Not Found") | Avrang.tj</PageTitle>
+<PageTitle>@(Product?.Name ?? "Product") | Avrang.tj</PageTitle>
 
-@if (Product == null)
+@if (_isLoading)
 {
-    <p>Loading...</p>
+    <div style="text-align:center; padding: 80px 0;"><div class="loading-spinner"></div></div>
+}
+else if (Product == null)
+{
+    <div class="empty-state"><h2>Product not found</h2><a href="/" class="btn btn-primary">Back to Home</a></div>
 }
 else
 {
     <div class="breadcrumbs">
-        <span>Catalog</span>
-        <span>/</span>
-        <span>@Product.Category?.Name</span>
-        <span>/</span>
+        <a href="/">Home</a><span>/</span>
+        <a href="/categories">@Product.Category?.Name</a><span>/</span>
         <span style="color: var(--text-main);">@Product.Name</span>
     </div>
 
@@ -21,25 +27,24 @@ else
         <div class="product-content-area">
             <div class="gallery-container fade-in delay-1">
                 <div class="thumbnails">
-                    <div class="thumb active grey-box hover-zoom"><span class="placeholder-letter" style="font-size:12px;">@Product.Name.ElementAtOrDefault(0)</span></div>
-                    <div class="thumb grey-box hover-zoom"><span class="placeholder-letter" style="font-size:12px;">@Product.Name.ElementAtOrDefault(0)</span></div>
-                    <div class="thumb grey-box hover-zoom"><span class="placeholder-letter" style="font-size:12px;">@Product.Name.ElementAtOrDefault(0)</span></div>
-                    <div class="thumb grey-box hover-zoom"><span class="placeholder-letter" style="font-size:12px;">@Product.Name.ElementAtOrDefault(0)</span></div>
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        <div class="thumb @(i == 0 ? "active" : "") hover-zoom">
+                            <img src="@GetProductImage(Product)" alt="@Product.Name"
+                                 style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-sm);" />
+                        </div>
+                    }
                 </div>
                 <div class="main-image">
-                    <div class="image-placeholder-large grey-box hover-zoom" style="width: 100%; height: 100%;">
-                        <span class="placeholder-letter" style="font-size: 160px; color: white;">@Product.Name.ElementAtOrDefault(0)</span>
-                    </div>
+                    <img src="@GetProductImage(Product)" alt="@Product.Name"
+                         style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg);" />
                 </div>
             </div>
 
             <div class="product-info-block">
                 <h2>Product Description</h2>
-                <p class="text-muted" style="font-size: 16px; margin-bottom: var(--space-4);">
-                    @Product.Description
-                </p>
-                <!-- Static details for now, as in the template -->
-                <ul class="text-muted" style="padding-left: 20px; font-size: 15px;">
+                <p class="text-muted" style="font-size: 16px; margin-bottom: var(--space-4);">@Product.Description</p>
+                <ul class="text-muted" style="padding-left: 20px; font-size: 15px; line-height: 2;">
                     <li>Advanced features built-in</li>
                     <li>Premium materials for ultimate comfort</li>
                     <li>Long-lasting durability</li>
@@ -53,11 +58,42 @@ else
                     <tbody>
                         <tr><td class="spec-label">Brand</td><td class="spec-value">@Product.Brand?.Name</td></tr>
                         <tr><td class="spec-label">Category</td><td class="spec-value">@Product.Category?.Name</td></tr>
-                        <tr><td class="spec-label">Weight</td><td class="spec-value">N/A</td></tr>
-                        <tr><td class="spec-label">Color</td><td class="spec-value">Multiple options</td></tr>
+                        <tr><td class="spec-label">Rating</td><td class="spec-value">@Product.AverageRating ⭐ (@Product.ReviewCount reviews)</td></tr>
                     </tbody>
                 </table>
             </div>
+
+            @if (_installments.Any())
+            {
+                <div class="product-info-block installment-block bounce-in">
+                    <h2>📦 Installment Plans</h2>
+                    <p class="text-muted" style="margin-bottom: var(--space-4);">Buy now, pay later with flexible installment options.</p>
+                    <div class="installment-grid">
+                        @foreach (var plan in _installments)
+                        {
+                            var monthly = InstallmentService.CalculateMonthlyPayment(Product.Price, plan);
+                            <div class="installment-card @(_selectedPlan?.Id == plan.Id ? "selected" : "") hover-lift"
+                                 @onclick="() => _selectedPlan = plan">
+                                <div class="installment-months">@plan.MonthCount <span>months</span></div>
+                                <div class="installment-price">$@monthly/mo</div>
+                                <div class="installment-rate">
+                                    @(plan.InterestRate == 0 ? "0% interest" : $"{plan.InterestRate}% interest")
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @if (_selectedPlan != null)
+                    {
+                        <div class="installment-summary fade-in">
+                            <p>✅ Selected: <strong>@_selectedPlan.MonthCount months</strong> – 
+                                $@InstallmentService.CalculateMonthlyPayment(Product.Price, _selectedPlan)/month
+                                @(_selectedPlan.InterestRate == 0 ? "(interest-free!)" : $"({_selectedPlan.InterestRate}% interest)")
+                            </p>
+                            <button class="btn btn-primary hover-lift" @onclick="BuyWithInstallment">Apply Installment Plan</button>
+                        </div>
+                    }
+                </div>
+            }
         </div>
 
         <aside class="product-sidebar-area">
@@ -66,11 +102,12 @@ else
                     <h1>@Product.Name</h1>
                     <div class="rating-summary">
                         <div class="stars">
-                            <svg style="fill: currentColor; stroke: none; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
-                            <svg style="fill: currentColor; stroke: none; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
-                            <svg style="fill: currentColor; stroke: none; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
-                            <svg style="fill: currentColor; stroke: none; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
-                            <svg style="fill: none; stroke: currentColor; width: 14px; height: 14px;" viewBox="0 0 20 20"><path d="M..."></path></svg>
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                <svg style="fill:@(i < (int)Math.Round(Product.AverageRating) ? "currentColor" : "none"); stroke:currentColor; width:14px; height:14px;" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                            }
                         </div>
                         <span class="text-small">@Product.AverageRating (@Product.ReviewCount Reviews)</span>
                     </div>
@@ -80,15 +117,11 @@ else
                             <span class="price-old">$@Product.OriginalPrice.ToString("F2")</span>
                         }
                         <span class="price-current">$@Product.Price.ToString("F2")</span>
-                    </div>
-                </div>
-
-                <div>
-                    <span class="selector-label">Color</span>
-                    <div class="color-options">
-                        <div class="color-circle active" style="background-color: #111;"></div>
-                        <div class="color-circle" style="background-color: #e0e0e0;"></div>
-                        <div class="color-circle" style="background-color: #3d4a6e;"></div>
+                        @if (Product.OriginalPrice > Product.Price)
+                        {
+                            var discount = (int)((1 - Product.Price / Product.OriginalPrice) * 100);
+                            <span class="discount-badge">-@discount%</span>
+                        }
                     </div>
                 </div>
 
@@ -102,8 +135,16 @@ else
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: var(--space-3);" class="bounce-in delay-2">
-                    <button class="btn btn-primary hover-lift">Add to Cart</button>
-                    <a href="/checkout" class="btn btn-outline hover-lift" style="width: 100%;">Buy Now</a>
+                    <button class="btn btn-primary hover-lift" @onclick="AddToCart">Add to Cart</button>
+                    <a href="/checkout" class="btn btn-outline hover-lift" style="width: 100%; text-align:center;">Buy Now</a>
+                    <button class="btn btn-outline hover-lift @(WishlistService.IsInWishlist(Product.Id) ? "active-wish-btn" : "")"
+                            @onclick="ToggleWishlist">
+                        @(WishlistService.IsInWishlist(Product.Id) ? "❤️ In Wishlist" : "🤍 Add to Wishlist")
+                    </button>
+                    <button class="btn btn-outline hover-lift"
+                            @onclick="() => CompareState.Toggle(Product)">
+                        @(CompareState.IsInCompare(Product.Id) ? "✓ In Compare" : "⚖ Add to Compare")
+                    </button>
                 </div>
 
                 <div class="sidebar-footer">
@@ -128,20 +169,61 @@ else
 }
 
 @code {
-    [Parameter]
-    public int Id { get; set; }
-
+    [Parameter] public int Id { get; set; }
     private Product? Product;
-    private int Quantity { get; set; } = 1;
+    private int Quantity = 1;
+    private bool _isLoading = true;
+    private List<InstallmentModel> _installments = new();
+    private InstallmentModel? _selectedPlan;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Product = DataService.Products.FirstOrDefault(p => p.Id == Id);
+        var tasks = new Task[] {
+            LoadProductAsync(),
+            LoadInstallmentsAsync()
+        };
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task LoadProductAsync()
+    {
+        Product = await ProductService.GetProductAsync(Id);
+        _isLoading = false;
+    }
+
+    private async Task LoadInstallmentsAsync()
+    {
+        _installments = await InstallmentService.GetInstallmentsAsync();
     }
 
     private void IncrementQuantity() => Quantity++;
-    private void DecrementQuantity()
+    private void DecrementQuantity() { if (Quantity > 1) Quantity--; }
+    private void AddToCart() { for (int i = 0; i < Quantity; i++) CartState.AddToCart(Product!); }
+    private async Task ToggleWishlist() => await WishlistService.ToggleAsync(Product!);
+    private void BuyWithInstallment() { /* navigate to checkout with plan */ }
+
+    private static readonly Dictionary<string, string> _imageMap = new(StringComparer.OrdinalIgnoreCase)
     {
-        if (Quantity > 1) Quantity--;
+        ["iphone"] = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80",
+        ["samsung"] = "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=600&q=80",
+        ["macbook"] = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80",
+        ["ipad"] = "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&q=80",
+        ["headphone"] = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
+        ["watch"] = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80",
+        ["camera"] = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=80",
+        ["nike"] = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",
+        ["laptop"] = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80",
+    };
+    private static readonly string[] _fallback = {
+        "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=600&q=80",
+        "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80",
+        "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=600&q=80",
+    };
+    private string GetProductImage(Product p)
+    {
+        if (!string.IsNullOrEmpty(p.ImageUrl)) return p.ImageUrl;
+        var name = p.Name.ToLower();
+        foreach (var kv in _imageMap) if (name.Contains(kv.Key)) return kv.Value;
+        return _fallback[Math.Abs(p.Id) % _fallback.Length];
     }
 }

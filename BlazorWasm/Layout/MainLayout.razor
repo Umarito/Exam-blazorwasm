@@ -1,4 +1,10 @@
 @inherits LayoutComponentBase
+@inject AuthService AuthService
+@inject CartStateService CartState
+@inject WishlistService WishlistService
+@inject CompareStateService CompareState
+@inject JwtAuthenticationStateProvider AuthProvider
+@inject NavigationManager Nav
 
 <header class="header">
     <div class="container nav-container">
@@ -9,34 +15,55 @@
                 Catalog
             </a>
         </div>
-        
+
         <div class="search-wrapper bounce-in">
             <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" class="search-input" placeholder="Search for products, brands...">
+            <input type="text" class="search-input" placeholder="Search for products, brands..." @bind="_searchQuery" @onkeyup="OnSearchKeyUp" />
         </div>
 
         <div class="nav-icons fade-in">
-            <a href="/profile" class="icon-btn hover-zoom delay-1">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <span>Account</span>
-            </a>
+            <AuthorizeView>
+                <Authorized>
+                    <a href="/profile" class="icon-btn hover-zoom delay-1">
+                        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <span>@_userName</span>
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/login" class="icon-btn hover-zoom delay-1">
+                        <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+                        <span>Login</span>
+                    </a>
+                </NotAuthorized>
+            </AuthorizeView>
+
             <a href="/compare" class="icon-btn hover-zoom delay-2">
                 <div class="icon-wrapper">
                     <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                    <span class="badge">0</span>
+                    @if (CompareState.Count > 0)
+                    {
+                        <span class="badge">@CompareState.Count</span>
+                    }
                 </div>
                 <span>Compare</span>
             </a>
             <a href="/favorites" class="icon-btn hover-zoom delay-3">
                 <div class="icon-wrapper">
                     <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    @if (WishlistService.Count > 0)
+                    {
+                        <span class="badge">@WishlistService.Count</span>
+                    }
                 </div>
                 <span>Favorites</span>
             </a>
             <a href="/cart" class="icon-btn hover-zoom delay-4">
                 <div class="icon-wrapper">
                     <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    <span class="badge">3</span>
+                    @if (CartState.Count > 0)
+                    {
+                        <span class="badge">@CartState.Count</span>
+                    }
                 </div>
                 <span>Cart</span>
             </a>
@@ -56,42 +83,80 @@
                 <p style="color: var(--text-inverse-muted); max-width: 250px; font-size: 14px; margin-top: var(--space-4);">
                     Your ultimate destination for modern, high-quality electronics and home appliances.
                 </p>
-                <div style="display: flex; gap: var(--space-3); margin-top: var(--space-4);">
-                    <button class="btn btn-outline hover-lift" style="border-color: rgba(255,255,255,0.2); color: white;">Book a demo</button>
-                </div>
             </div>
             <div class="footer-col">
-                <h4>Services</h4>
+                <h4>Shopping</h4>
                 <ul>
-                    <li><a href="#" class="outline-hover">Health examinations</a></li>
-                    <li><a href="#" class="outline-hover">Employee surveys</a></li>
-                    <li><a href="#" class="outline-hover">Health program</a></li>
+                    <li><a href="/categories" class="outline-hover">All Categories</a></li>
+                    <li><a href="/favorites" class="outline-hover">Wishlist</a></li>
+                    <li><a href="/compare" class="outline-hover">Compare</a></li>
+                    <li><a href="/cart" class="outline-hover">Cart</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Account</h4>
+                <ul>
+                    <li><a href="/profile" class="outline-hover">My Profile</a></li>
+                    <li><a href="/orders" class="outline-hover">Order History</a></li>
+                    <AuthorizeView>
+                        <Authorized>
+                            <li><a href="javascript:void(0)" @onclick="Logout" class="outline-hover">Logout</a></li>
+                        </Authorized>
+                        <NotAuthorized>
+                            <li><a href="/login" class="outline-hover">Sign In</a></li>
+                            <li><a href="/register" class="outline-hover">Register</a></li>
+                        </NotAuthorized>
+                    </AuthorizeView>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Company</h4>
                 <ul>
-                    <li><a href="#" class="outline-hover">About us</a></li>
-                    <li><a href="#" class="outline-hover">Health place to work</a></li>
-                    <li><a href="#" class="outline-hover">FAQ</a></li>
-                    <li><a href="#" class="outline-hover">Careers</a></li>
-                    <li><a href="#" class="outline-hover">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Insights</h4>
-                <ul>
-                    <li><a href="#" class="outline-hover">All insights</a></li>
-                    <li><a href="#" class="outline-hover">Newsletter</a></li>
+                    <li><a href="javascript:void(0)" class="outline-hover">About us</a></li>
+                    <li><a href="javascript:void(0)" class="outline-hover">FAQ</a></li>
+                    <li><a href="javascript:void(0)" class="outline-hover">Contact</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <span>© 2023 Avrang.tj. All rights reserved.</span>
+            <span>© 2024 Avrang.tj. All rights reserved.</span>
             <div style="display: flex; gap: var(--space-4);">
-                <a href="#" class="outline-hover">Privacy Policy</a>
-                <a href="#" class="outline-hover">Terms of Service</a>
+                <a href="javascript:void(0)" class="outline-hover">Privacy Policy</a>
+                <a href="javascript:void(0)" class="outline-hover">Terms of Service</a>
             </div>
         </div>
     </div>
 </footer>
+
+@code {
+    private string? _userName;
+    private string _searchQuery = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await WishlistService.InitializeAsync();
+        WishlistService.OnChanged += StateHasChanged;
+        CartState.OnChanged += StateHasChanged;
+        CompareState.OnChanged += StateHasChanged;
+        _userName = await AuthProvider.GetUserNameAsync();
+    }
+
+    private void OnSearchKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(_searchQuery))
+            Nav.NavigateTo($"/categories?search={Uri.EscapeDataString(_searchQuery)}");
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Nav.NavigateTo("/");
+    }
+
+    public void Dispose()
+    {
+        WishlistService.OnChanged -= StateHasChanged;
+        CartState.OnChanged -= StateHasChanged;
+        CompareState.OnChanged -= StateHasChanged;
+    }
+}

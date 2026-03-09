@@ -28,16 +28,24 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Layout/AuthInitializer.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XEF1dGhJbml0aWFsaXplci5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Layout/LoginDisplay.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XExvZ2luRGlzcGxheS5yYXpvcg==
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ291bnRlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/OrderHistory.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT3JkZXJIaXN0b3J5LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Register.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Weather.razor]
@@ -47,14 +55,6 @@ build_metadata.AdditionalFiles.CssScope =
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Layout/MainLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-ofc4bbdklp
-
-[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Layout/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = b-4yk6wy4zd6
 
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/BlazorWasm/Pages/Cart.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FydC5yYXpvcg==

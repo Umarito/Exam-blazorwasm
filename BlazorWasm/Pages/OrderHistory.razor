@@ -1,0 +1,87 @@
+@page "/orders"
+@inject OrderApiService OrderService
+
+<PageTitle>Order History – Avrang.tj</PageTitle>
+
+<div class="page-container fade-in-up">
+    <div class="page-header bounce-in">
+        <div>
+            <h1>Order History</h1>
+            <p class="text-muted">Track and manage all your past orders</p>
+        </div>
+        <a href="/profile" class="btn btn-outline hover-lift">← Back to Profile</a>
+    </div>
+
+    @if (_isLoading)
+    {
+        <div style="text-align:center; padding:60px 0;"><div class="loading-spinner"></div></div>
+    }
+    else if (!_orders.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon-box pulse">
+                <svg viewBox="0 0 24 24" style="width:40px;height:40px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path></svg>
+            </div>
+            <h2>No orders yet</h2>
+            <p class="text-muted">Start shopping to see your order history here.</p>
+            <a href="/" class="btn btn-primary hover-lift">Start Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="orders-list stagger-stair">
+            @foreach (var order in _orders)
+            {
+                <div class="order-card hover-lift fade-in-up">
+                    <div class="order-card-header">
+                        <div>
+                            <span class="order-id">#ORD-@order.Id.ToString("D5")</span>
+                            <span class="text-muted" style="margin-left:12px; font-size:14px;">@order.CreatedAt.ToString("MMM dd, yyyy")</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <span class="status-pill @GetStatusClass(order.Status)">@order.Status</span>
+                            <span style="font-weight:600;">$@order.TotalAmount.ToString("F2")</span>
+                        </div>
+                    </div>
+                    @if (order.Items.Any())
+                    {
+                        <div class="order-items-list">
+                            @foreach (var item in order.Items.Take(3))
+                            {
+                                <div class="order-item-row">
+                                    <span>@item.ProductName</span>
+                                    <span class="text-muted">x@item.Quantity</span>
+                                    <span>$@item.Price.ToString("F2")</span>
+                                </div>
+                            }
+                            @if (order.Items.Count > 3)
+                            {
+                                <p class="text-muted" style="font-size:13px;margin:8px 0 0;">+@(order.Items.Count - 3) more items</p>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<OrderModel> _orders = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _orders = await OrderService.GetMyOrdersAsync();
+        _isLoading = false;
+    }
+
+    private static string GetStatusClass(string status) => status.ToLower() switch
+    {
+        "delivered" => "status-delivered",
+        "processing" => "status-processing",
+        "shipped" => "status-shipped",
+        "cancelled" => "status-cancelled",
+        _ => "status-processing"
+    };
+}

@@ -1,5 +1,7 @@
 @page "/compare"
-@inject FakeDataService DataService
+@inject CompareStateService CompareState
+@inject CartStateService CartState
+@inject NavigationManager Nav
 
 <PageTitle>Compare Products - Avrang</PageTitle>
 
@@ -10,18 +12,18 @@
             <p class="text-muted">Find the right product for your needs by comparing features.</p>
         </div>
         <div>
-            <button class="btn btn-outline hover-lift" @onclick="ClearCompare">Clear All</button>
+            <button class="btn btn-outline hover-lift" @onclick="CompareState.Clear">Clear All</button>
         </div>
     </div>
 
-    @if (CompareProducts == null || !CompareProducts.Any())
+    @if (CompareState.Items == null || !CompareState.Items.Any())
     {
         <div class="empty-state pulse-soft">
             <div class="empty-icon-box">
                 <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
             </div>
             <h2>Nothing to compare</h2>
-            <p class="text-muted" style="max-width: 320px;">Add items to the compare list to see them side-by-side.</p>
+            <p class="text-muted" style="max-width: 320px;">Add items to the compare list from the home or category pages to see them side-by-side.</p>
             <a href="/" class="btn btn-primary hover-lift mt-3">Browse Products</a>
         </div>
     }
@@ -29,26 +31,26 @@
     {
         <div class="compare-table-wrapper stagger-stair">
             <div class="compare-row header-row">
-                <div class="compare-cell feature-label"></div>
-                @foreach (var prod in CompareProducts)
+                <div class="compare-cell feature-label">Product</div>
+                @foreach (var prod in CompareState.Items)
                 {
                     <div class="compare-cell product-header">
-                        <button class="remove-btn hover-zoom" @onclick="() => RemoveProduct(prod)">
+                        <button class="remove-btn hover-zoom" @onclick="() => CompareState.Toggle(prod)">
                             <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </button>
                         <div class="grey-rect-img hover-lift">
-                            <span class="img-placeholder-text">@prod.Name.ElementAtOrDefault(0)</span>
+                            <img src="@GetProductImage(prod)" alt="@prod.Name" style="width:100%; height:100%; object-fit:cover; border-radius: var(--radius-md);" />
                         </div>
                         <div class="prod-title">@prod.Name</div>
                         <div class="prod-price price-accent">$@prod.Price.ToString("F2")</div>
-                        <button class="btn btn-primary btn-sm hover-lift w-100 mt-2">Add to Cart</button>
+                        <button class="btn btn-primary btn-sm hover-lift w-100 mt-2" @onclick="() => CartState.AddToCart(prod)">Add to Cart</button>
                     </div>
                 }
             </div>
 
             <div class="compare-row">
                 <div class="compare-cell feature-label">Brand</div>
-                @foreach (var prod in CompareProducts)
+                @foreach (var prod in CompareState.Items)
                 {
                     <div class="compare-cell">@(prod.Brand?.Name ?? "N/A")</div>
                 }
@@ -56,7 +58,7 @@
 
             <div class="compare-row">
                 <div class="compare-cell feature-label">Category</div>
-                @foreach (var prod in CompareProducts)
+                @foreach (var prod in CompareState.Items)
                 {
                     <div class="compare-cell">@(prod.Category?.Name ?? "N/A")</div>
                 }
@@ -64,7 +66,7 @@
 
             <div class="compare-row">
                 <div class="compare-cell feature-label">Rating</div>
-                @foreach (var prod in CompareProducts)
+                @foreach (var prod in CompareState.Items)
                 {
                     <div class="compare-cell">
                         <span style="color: #f39c12; font-weight: 500;">★ @prod.AverageRating</span>
@@ -75,9 +77,9 @@
 
             <div class="compare-row">
                 <div class="compare-cell feature-label">Description</div>
-                @foreach (var prod in CompareProducts)
+                @foreach (var prod in CompareState.Items)
                 {
-                    <div class="compare-cell text-small text-muted" style="line-height: 1.6;">
+                    <div class="compare-cell text-small text-muted" style="line-height: 1.6; max-height: 100px; overflow-y: auto;">
                         @prod.Description
                     </div>
                 }
@@ -87,21 +89,43 @@
 </div>
 
 @code {
-    private List<Product> CompareProducts { get; set; } = new();
-
     protected override void OnInitialized()
     {
-        // Mock data logic: take 3 random products to showcase the compare feature cleanly
-        CompareProducts = DataService.Products.Take(3).ToList();
+        CompareState.OnChanged += StateHasChanged;
     }
 
-    private void RemoveProduct(Product prod)
+    private static readonly Dictionary<string, string> _imageMap = new(StringComparer.OrdinalIgnoreCase)
     {
-        CompareProducts.Remove(prod);
+        ["iphone"] = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80",
+        ["samsung"] = "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&q=80",
+        ["macbook"] = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&q=80",
+        ["ipad"] = "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80",
+        ["headphone"] = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80",
+        ["watch"] = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80",
+        ["camera"] = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=80",
+        ["coffee"] = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80",
+        ["earbuds"] = "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&q=80",
+        ["nike"] = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80",
+        ["laptop"] = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=80",
+        ["speaker"] = "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80",
+    };
+
+    private static readonly string[] _fallbackImages = {
+        "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&q=80",
+        "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80",
+    };
+
+    private string GetProductImage(Product p)
+    {
+        if (!string.IsNullOrEmpty(p.ImageUrl)) return p.ImageUrl;
+        var name = p.Name.ToLower();
+        foreach (var kv in _imageMap)
+            if (name.Contains(kv.Key)) return kv.Value;
+        return _fallbackImages[Math.Abs(p.Id) % _fallbackImages.Length];
     }
 
-    private void ClearCompare()
+    public void Dispose()
     {
-        CompareProducts.Clear();
+        CompareState.OnChanged -= StateHasChanged;
     }
 }
