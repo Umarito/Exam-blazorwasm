@@ -13,20 +13,39 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="products" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Products
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Dashboard
+            </NavLink>
+        </div>
+        
+        <div style="border-bottom: 1px solid #ccc; margin: 10px 0;"></div>
+        
+        <h5 style="padding: 10px 15px; font-size: 12px; color: #666; text-transform: uppercase;">Catalog</h5>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="products">
+                <span class="bi bi-box-seam-nav-menu" aria-hidden="true"></span> Products
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="categories">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Categories
+                <span class="bi bi-tags-nav-menu" aria-hidden="true"></span> Categories
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="installments">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Installments
+            <NavLink class="nav-link" href="brands">
+                <span class="bi bi-bookmark-nav-menu" aria-hidden="true"></span> Brands
             </NavLink>
         </div>
+
+        <h5 style="padding: 10px 15px; font-size: 12px; color: #666; text-transform: uppercase; margin-top: 15px;">Store</h5>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="installments">
+                <span class="bi bi-credit-card-nav-menu" aria-hidden="true"></span> Installments
+            </NavLink>
+        </div>
+
+        <div style="border-bottom: 1px solid #ccc; margin: 10px 0;"></div>
+        
         <div class="nav-item px-3 mt-auto">
             <button class="nav-link btn btn-link" @onclick="HandleLogout">
                 <span class="bi bi-arrow-bar-left" aria-hidden="true"></span> Logout

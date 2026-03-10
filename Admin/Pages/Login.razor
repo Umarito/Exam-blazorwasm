@@ -27,11 +27,15 @@
                 <label>Password</label>
                 <InputText @bind-Value="_model.Password" class="form-control" type="password" />
             </div>
-            <button type="submit" class="btn btn-primary w-100" disabled="@_isLoading">
+            <button type="submit" class="btn btn-primary w-100 mb-3" disabled="@_isLoading">
                 @if (_isLoading) { <span class="spinner-border spinner-border-sm"></span> }
                 else { <span>Login</span> }
             </button>
         </EditForm>
+
+        <p class="text-center">
+            Don't have an account? <a href="/register" class="text-decoration-none">Register here</a>
+        </p>
     </div>
 </div>
 

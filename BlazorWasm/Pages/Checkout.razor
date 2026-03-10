@@ -1,5 +1,5 @@
 @page "/checkout"
-@inject FakeDataService DataService
+@inject CartStateService CartState
 
 <PageTitle>Checkout - Avrang.tj</PageTitle>
 
@@ -147,14 +147,10 @@
 
     private ShippingInfo ShippingDetails { get; set; } = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        var products = DataService.Products.Take(2).ToList();
-        if (products.Count >= 2)
-        {
-            CartItems.Add(new CartItem { Id = 1, Product = products[0], Quantity = 1 });
-            CartItems.Add(new CartItem { Id = 2, Product = products[1], Quantity = 1 });
-        }
+        await CartState.InitializeAsync();
+        CartItems = CartState.Items.ToList();
     }
 
     private decimal Subtotal => CartItems.Sum(i => i.Product.Price * i.Quantity);

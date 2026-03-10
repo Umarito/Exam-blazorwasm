@@ -56,6 +56,18 @@ public class AdminApiService
         var response = await _http.PostAsJsonAsync("categories", category);
         return response.IsSuccessStatusCode;
     }
+
+    public async Task<bool> UpdateCategoryAsync(Category category)
+    {
+        var response = await _http.PutAsJsonAsync($"categories/{category.Id}", category);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> DeleteCategoryAsync(int id)
+    {
+        var response = await _http.DeleteAsync($"categories/{id}");
+        return response.IsSuccessStatusCode;
+    }
     #endregion
 
     #region Installments
@@ -74,6 +86,32 @@ public class AdminApiService
     public async Task<bool> DeleteInstallmentAsync(int id)
     {
         var response = await _http.DeleteAsync($"installments/{id}");
+        return response.IsSuccessStatusCode;
+    }
+    #endregion
+
+    #region Brands
+    public async Task<List<Brand>> GetBrandsAsync()
+    {
+        var result = await _http.GetFromJsonAsync<PagedResult<Brand>>("brands?PageSize=100");
+        return result?.Items ?? new();
+    }
+
+    public async Task<bool> CreateBrandAsync(Brand brand)
+    {
+        var response = await _http.PostAsJsonAsync("brands", brand);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> UpdateBrandAsync(Brand brand)
+    {
+        var response = await _http.PutAsJsonAsync($"brands/{brand.Id}", brand);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> DeleteBrandAsync(int id)
+    {
+        var response = await _http.DeleteAsync($"brands/{id}");
         return response.IsSuccessStatusCode;
     }
     #endregion

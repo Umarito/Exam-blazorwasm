@@ -135,6 +135,8 @@
     protected override async Task OnInitializedAsync()
     {
         await WishlistService.InitializeAsync();
+        await CartState.InitializeAsync();
+        await CompareState.InitializeAsync();
         WishlistService.OnChanged += StateHasChanged;
         CartState.OnChanged += StateHasChanged;
         CompareState.OnChanged += StateHasChanged;

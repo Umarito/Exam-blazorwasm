@@ -4,6 +4,7 @@
 @inject CartStateService CartState
 @inject CompareStateService CompareState
 @inject InstallmentApiService InstallmentService
+@inject NavigationManager Nav
 
 <PageTitle>@(Product?.Name ?? "Product") | Avrang.tj</PageTitle>
 
@@ -136,7 +137,7 @@ else
 
                 <div style="display: flex; flex-direction: column; gap: var(--space-3);" class="bounce-in delay-2">
                     <button class="btn btn-primary hover-lift" @onclick="AddToCart">Add to Cart</button>
-                    <a href="/checkout" class="btn btn-outline hover-lift" style="width: 100%; text-align:center;">Buy Now</a>
+                    <button class="btn btn-outline hover-lift" style="width: 100%; text-align:center;" @onclick="BuyNow">Buy Now</button>
                     <button class="btn btn-outline hover-lift @(WishlistService.IsInWishlist(Product.Id) ? "active-wish-btn" : "")"
                             @onclick="ToggleWishlist">
                         @(WishlistService.IsInWishlist(Product.Id) ? "❤️ In Wishlist" : "🤍 Add to Wishlist")
@@ -198,7 +199,18 @@ else
 
     private void IncrementQuantity() => Quantity++;
     private void DecrementQuantity() { if (Quantity > 1) Quantity--; }
-    private void AddToCart() { for (int i = 0; i < Quantity; i++) CartState.AddToCart(Product!); }
+    private void AddToCart()
+    {
+        if (Product == null) return;
+        CartState.AddToCart(Product, Quantity);
+    }
+
+    private void BuyNow()
+    {
+        if (Product == null) return;
+        CartState.AddToCart(Product, Quantity);
+        Nav.NavigateTo("/checkout");
+    }
     private async Task ToggleWishlist() => await WishlistService.ToggleAsync(Product!);
     private void BuyWithInstallment() { /* navigate to checkout with plan */ }
 

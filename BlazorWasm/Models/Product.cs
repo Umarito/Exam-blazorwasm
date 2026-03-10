@@ -8,6 +8,7 @@ public class Product
     public decimal Price { get; set; }
     public decimal OriginalPrice { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
+    public int StockQuantity { get; set; }
     public int CategoryId { get; set; }
     public Category? Category { get; set; }
     public int BrandId { get; set; }

@@ -1,5 +1,8 @@
 @page "/cart"
-@inject FakeDataService DataService
+@implements IDisposable
+@using BlazorWasm.Models
+@using BlazorWasm.Services
+@inject CartStateService CartState
 
 <PageTitle>Your Cart - Avrang.tj</PageTitle>
 
@@ -10,26 +13,41 @@
         <div class="cart-items-list">
             @if (CartItems == null || !CartItems.Any())
             {
-                <p>Your cart is empty.</p>
-                <a href="/" class="btn btn-outline">Continue Shopping</a>
+                <div class="empty-state pulse-soft">
+                    <div class="empty-icon-box">
+                        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    </div>
+                    <h2>Your cart is empty</h2>
+                    <p class="text-muted" style="max-width: 320px;">Explore the catalog and add items you love. Your cart will be saved automatically.</p>
+                    <a href="/" class="btn btn-primary hover-lift">Continue Shopping</a>
+                </div>
             }
             else
             {
                 @foreach (var item in CartItems)
                 {
                     <div class="cart-item">
-                        <div class="cart-item-img"></div>
+                        <div class="cart-item-img">
+                            <img src="@GetProductImage(item.Product)" alt="@item.Product.Name" />
+                        </div>
                         <div class="cart-item-info">
                             <span class="cart-item-category">@item.Product.Category?.Name</span>
                             <h2 class="cart-item-name">@item.Product.Name</h2>
+                            <div class="cart-item-meta">
+                                <span class="text-small text-muted">Price per item</span>
+                                <span class="item-price">$@item.Product.Price.ToString("F2")</span>
+                            </div>
                             <button class="remove-btn" @onclick="() => RemoveItem(item)">Remove</button>
                         </div>
                         <div class="cart-item-controls">
-                            <div class="item-price">$@item.Product.Price.ToString("F2")</div>
                             <div class="quantity-picker">
                                 <button class="qty-btn" @onclick="() => Decrement(item)">-</button>
                                 <span class="qty-val">@item.Quantity</span>
                                 <button class="qty-btn" @onclick="() => Increment(item)">+</button>
+                            </div>
+                            <div class="line-total">
+                                <span class="text-small text-muted">Total</span>
+                                <strong>$@((item.Product.Price * item.Quantity).ToString("F2"))</strong>
                             </div>
                         </div>
                     </div>
@@ -75,31 +93,58 @@
 </div>
 
 @code {
-    private List<CartItem> CartItems { get; set; } = new();
+    private IReadOnlyList<CartItem> CartItems => CartState.Items;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Mocking a cart state using the first 3 products
-        var products = DataService.Products.Take(3).ToList();
-        
-        if (products.Count >= 3)
-        {
-            CartItems.Add(new CartItem { Id = 1, Product = products[0], Quantity = 1 });
-            CartItems.Add(new CartItem { Id = 2, Product = products[1], Quantity = 1 });
-            CartItems.Add(new CartItem { Id = 3, Product = products[2], Quantity = 1 });
-        }
+        await CartState.InitializeAsync();
+        CartState.OnChanged += StateHasChanged;
     }
 
-    private decimal Subtotal => CartItems.Sum(i => i.Product.Price * i.Quantity);
+    private decimal Subtotal => CartItems.Sum(i => i.Product?.Price * i.Quantity ?? 0);
 
-    private void Increment(CartItem item) => item.Quantity++;
+    private void Increment(CartItem item) => CartState.SetQuantity(item.Product.Id, item.Quantity + 1);
+
     private void Decrement(CartItem item)
     {
-        if (item.Quantity > 1) item.Quantity--;
+        if (item.Quantity > 1)
+        {
+            CartState.SetQuantity(item.Product.Id, item.Quantity - 1);
+        }
     }
     
     private void RemoveItem(CartItem item)
     {
-        CartItems.Remove(item);
+        CartState.Remove(item.Product.Id);
+    }
+
+    private static readonly Dictionary<string, string> _imageMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["iphone"] = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80",
+        ["samsung"] = "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&q=80",
+        ["macbook"] = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&q=80",
+        ["ipad"] = "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&q=80",
+        ["headphone"] = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80",
+        ["watch"] = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80",
+        ["camera"] = "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=80",
+        ["laptop"] = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=80"
+    };
+    private static readonly string[] _fallback = {
+        "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&q=80",
+        "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=80"
+    };
+
+    private string GetProductImage(Product p)
+    {
+        if (!string.IsNullOrEmpty(p.ImageUrl)) return p.ImageUrl;
+        var name = p.Name.ToLower();
+        foreach (var kv in _imageMap)
+            if (name.Contains(kv.Key)) return kv.Value;
+        return _fallback[Math.Abs(p.Id) % _fallback.Length];
+    }
+
+    public void Dispose()
+    {
+        CartState.OnChanged -= StateHasChanged;
     }
 }

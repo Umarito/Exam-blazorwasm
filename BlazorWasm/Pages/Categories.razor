@@ -20,6 +20,21 @@
                 </button>
             }
         </div>
+
+        <div style="margin-top: var(--space-6);">
+            <h3 class="sidebar-title">Brands</h3>
+            <div class="sidebar-nav">
+                <button class="sidebar-btn @(SelectedBrandId == null ? "active" : "")" @onclick="() => FilterByBrand(null)">
+                    All Brands
+                </button>
+                @foreach (var brand in BrandList)
+                {
+                    <button class="sidebar-btn hover-lift @(SelectedBrandId == brand.Id ? "active" : "")" @onclick="() => FilterByBrand(brand.Id)">
+                        @brand.Name
+                    </button>
+                }
+            </div>
+        </div>
         
         <div style="margin-top: var(--space-6);">
             <h3 class="sidebar-title">Sort By</h3>
@@ -28,6 +43,23 @@
                 <button class="sidebar-btn @(SortBy == "price_low" ? "active" : "")" @onclick='() => SetSort("price_low")'>Price: Low to High</button>
                 <button class="sidebar-btn @(SortBy == "price_high" ? "active" : "")" @onclick='() => SetSort("price_high")'>Price: High to Low</button>
             </div>
+        </div>
+
+        <div style="margin-top: var(--space-6);">
+            <h3 class="sidebar-title">Price</h3>
+            <div class="price-filter">
+                <input type="number" class="price-input" placeholder="Min" @bind="MinPrice" @bind:event="oninput" />
+                <input type="number" class="price-input" placeholder="Max" @bind="MaxPrice" @bind:event="oninput" />
+                <button class="btn btn-outline btn-sm hover-lift" @onclick="ApplyFilters">Apply</button>
+            </div>
+        </div>
+
+        <div style="margin-top: var(--space-6);">
+            <h3 class="sidebar-title">Availability</h3>
+            <label class="availability-toggle">
+                <input type="checkbox" @bind="OnlyAvailable" />
+                <span>In stock only</span>
+            </label>
         </div>
     </aside>
 
@@ -104,9 +136,23 @@
     private List<Product> _allProducts = new();
     private List<Product> FilteredProducts { get; set; } = new();
     private List<Category> CategoryList { get; set; } = new();
+    private List<Brand> BrandList { get; set; } = new();
     
     private int? SelectedCategoryId { get; set; }
+    private int? SelectedBrandId { get; set; }
     private string SortBy { get; set; } = "newest";
+    private decimal? MinPrice { get; set; }
+    private decimal? MaxPrice { get; set; }
+    private bool _onlyAvailable;
+    private bool OnlyAvailable
+    {
+        get => _onlyAvailable;
+        set
+        {
+            _onlyAvailable = value;
+            ApplyFilters();
+        }
+    }
     private bool _isLoading = true;
 
     private string CurrentViewTitle => 
@@ -123,6 +169,7 @@
     {
         _isLoading = true;
         CategoryList = await ProductService.GetCategoriesAsync();
+        BrandList = await ProductService.GetBrandsAsync();
         _allProducts = await ProductService.GetProductsAsync(1, 100);
         ApplyFilters();
         _isLoading = false;
@@ -140,6 +187,12 @@
         ApplyFilters();
     }
 
+    private void FilterByBrand(int? brandId)
+    {
+        SelectedBrandId = brandId;
+        ApplyFilters();
+    }
+
     private void ApplyFilters()
     {
         var query = _allProducts.AsEnumerable();
@@ -147,6 +200,26 @@
         if (SelectedCategoryId.HasValue)
         {
             query = query.Where(p => p.CategoryId == SelectedCategoryId.Value);
+        }
+
+        if (SelectedBrandId.HasValue)
+        {
+            query = query.Where(p => p.BrandId == SelectedBrandId.Value);
+        }
+
+        if (MinPrice.HasValue)
+        {
+            query = query.Where(p => p.Price >= MinPrice.Value);
+        }
+
+        if (MaxPrice.HasValue)
+        {
+            query = query.Where(p => p.Price <= MaxPrice.Value);
+        }
+
+        if (OnlyAvailable)
+        {
+            query = query.Where(p => p.StockQuantity > 0);
         }
 
         query = SortBy switch
@@ -162,7 +235,11 @@
     private void ClearFilters()
     {
         SelectedCategoryId = null;
+        SelectedBrandId = null;
         SortBy = "newest";
+        MinPrice = null;
+        MaxPrice = null;
+        OnlyAvailable = false;
         ApplyFilters();
     }
 

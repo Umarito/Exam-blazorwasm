@@ -24,7 +24,12 @@ public class ProductRepository(ApplicationDbContext applicationDBContext,ILogger
 
     public async Task<Product?> GetByIdAsync(int id)
     {
-        return await _context.Products.FindAsync(id);
+        return await _context.Products
+            .AsNoTracking()
+            .Include(p => p.Category)
+            .Include(p => p.Brand)
+            .Include(p => p.Reviews)
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task UpdateAsync(Product Product)
@@ -38,7 +43,11 @@ public class ProductRepository(ApplicationDbContext applicationDBContext,ILogger
         var page = pagedQuery.Page <= 0 ? 1 : pagedQuery.Page;
         var pageSize = pagedQuery.PageSize <= 0 ? 10 : pagedQuery.PageSize;
 
-        IQueryable<Product> query = _context.Products.AsNoTracking();
+        IQueryable<Product> query = _context.Products
+            .AsNoTracking()
+            .Include(p => p.Category)
+            .Include(p => p.Brand)
+            .Include(p => p.Reviews);
 
         if (!string.IsNullOrWhiteSpace(filter?.Name))
             query = query.Where(x => x.Name.Contains(filter.Name));
@@ -47,7 +56,24 @@ public class ProductRepository(ApplicationDbContext applicationDBContext,ILogger
             query = query.Where(x => x.IsActive == filter.IsActive); 
 
         if (filter?.Price > 0)
-        query = query.Where(x => x.Price <= filter.Price);
+            query = query.Where(x => x.Price <= filter.Price);
+
+        if (filter?.MinPrice != null)
+            query = query.Where(x => x.Price >= filter.MinPrice);
+
+        if (filter?.MaxPrice != null)
+            query = query.Where(x => x.Price <= filter.MaxPrice);
+
+        if (filter?.CategoryId != null)
+            query = query.Where(x => x.CategoryId == filter.CategoryId);
+
+        if (filter?.BrandId != null)
+            query = query.Where(x => x.BrandId == filter.BrandId);
+
+        if (filter?.IsAvailable != null)
+            query = filter.IsAvailable.Value
+                ? query.Where(x => x.StockQuantity > 0)
+                : query.Where(x => x.StockQuantity <= 0);
 
         var totalCount = await query.CountAsync();
 

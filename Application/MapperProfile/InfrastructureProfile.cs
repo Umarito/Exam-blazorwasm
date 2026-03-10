@@ -1,4 +1,5 @@
 using AutoMapper;
+using System.Linq;
 
 public class InfrastructureProfile : Profile
 {
@@ -22,13 +23,17 @@ public class InfrastructureProfile : Profile
         CreateMap<Cart,CartGetDto>();
         CreateMap<CartInsertDto,Cart>();
         CreateMap<CartUpdateDto,Cart>();
-        CreateMap<Category,CategoryGetDto>();
+        CreateMap<Category,CategoryGetDto>()
+            .ForMember(d => d.Products, o => o.Ignore());
         CreateMap<CategoryInsertDto,Category>();
         CreateMap<CategoryUpdateDto,Category>();
         CreateMap<CartItem,CartItemGetDto>();
         CreateMap<CartItemInsertDto,CartItem>();
         CreateMap<CartItemUpdateDto,CartItem>();
-        CreateMap<Product,ProductGetDto>();
+        CreateMap<Product,ProductGetDto>()
+            .ForMember(d => d.OriginalPrice, o => o.MapFrom(s => s.OldPrice))
+            .ForMember(d => d.AverageRating, o => o.MapFrom(s => s.Reviews.Any() ? s.Reviews.Average(r => r.Rating) : 0))
+            .ForMember(d => d.ReviewCount, o => o.MapFrom(s => s.Reviews.Count));
         CreateMap<ProductInsertDto,Product>();
         CreateMap<ProductUpdateDto,Product>();
         CreateMap<ProductImage,ProductImageGetDto>();
@@ -49,7 +54,8 @@ public class InfrastructureProfile : Profile
         CreateMap<Installment,InstallmentGetDto>();
         CreateMap<InstallmentInsertDto,Installment>();
         CreateMap<InstallmentUpdateDto,Installment>();
-        CreateMap<Brand,BrandGetDto>();
+        CreateMap<Brand,BrandGetDto>()
+            .ForMember(d => d.Products, o => o.Ignore());
         CreateMap<BrandInsertDto,Brand>();
         CreateMap<BrandUpdateDto,Brand>();
         CreateMap<Banner,BannerGetDto>();

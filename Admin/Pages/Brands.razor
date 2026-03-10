@@ -1,0 +1,87 @@
+@page "/brands"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+
+<PageTitle>Manage Brands - Avrang Admin</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Brands</h1>
+        <div class="d-flex gap-2">
+            <input type="text" class="form-control" placeholder="Brand Name" @bind="_newBrandName" />
+            <input type="text" class="form-control" placeholder="Slug" @bind="_newBrandSlug" style="max-width: 150px;" />
+            <button class="btn btn-success" @onclick="AddBrand">Add Brand</button>
+        </div>
+    </div>
+
+    @if (_brands == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else if (_brands.Count == 0)
+    {
+        <div class="alert alert-info">No brands found. Add one to get started!</div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var brand in _brands)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@brand.Name</h5>
+                            <p class="card-text text-muted small">@brand.Slug</p>
+                            <div class="badge bg-info">ID: @brand.Id</div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <button class="btn btn-sm btn-outline-danger w-100" @onclick="() => DeleteBrand(brand.Id)">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<Brand>? _brands;
+    private string _newBrandName = "";
+    private string _newBrandSlug = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _brands = await Api.GetBrandsAsync();
+    }
+
+    private async Task AddBrand()
+    {
+        if (string.IsNullOrWhiteSpace(_newBrandName)) return;
+        
+        var slug = string.IsNullOrWhiteSpace(_newBrandSlug) 
+            ? _newBrandName.ToLower().Replace(" ", "-") 
+            : _newBrandSlug.ToLower();
+
+        var success = await Api.CreateBrandAsync(new Brand { Name = _newBrandName, Slug = slug });
+        if (success)
+        {
+            _newBrandName = "";
+            _newBrandSlug = "";
+            await LoadData();
+        }
+    }
+
+    private async Task DeleteBrand(int id)
+    {
+        if (await Api.DeleteBrandAsync(id))
+            await LoadData();
+    }
+}

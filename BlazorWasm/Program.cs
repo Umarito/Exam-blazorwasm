@@ -20,6 +20,8 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ProductApiService>();
 builder.Services.AddScoped<WishlistService>();
 builder.Services.AddScoped<OrderApiService>();
+builder.Services.AddScoped<CartApiService>();
+builder.Services.AddScoped<ReviewApiService>();
 builder.Services.AddScoped<InstallmentApiService>();
 builder.Services.AddScoped<CartStateService>();
 builder.Services.AddScoped<CompareStateService>();

@@ -12,7 +12,7 @@ public class ProductService(IMapper mapper,IProductRepository ProductRepository,
     private readonly ILogger<ProductService> _logger = logger;
     private string BuildCacheKey(ProductFilter filter, PagedQuery query)
     {
-        return $"Products:getAll:page={query.Page}:size={query.PageSize}:name={filter?.Name}:price={filter?.Price}:isActive={filter?.IsActive}";
+        return $"Products:getAll:page={query.Page}:size={query.PageSize}:name={filter?.Name}:price={filter?.Price}:min={filter?.MinPrice}:max={filter?.MaxPrice}:cat={filter?.CategoryId}:brand={filter?.BrandId}:avail={filter?.IsAvailable}:isActive={filter?.IsActive}";
     }
     public async Task<Response<string>> AddProductAsync(ProductInsertDto ProductInsertDto)
     {

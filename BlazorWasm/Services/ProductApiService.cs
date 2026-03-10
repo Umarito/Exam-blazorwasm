@@ -84,4 +84,28 @@ public class ProductApiService
         }
         catch { return new(); }
     }
+
+    public async Task<List<Brand>> GetBrandsAsync()
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync("brands");
+            if (!response.IsSuccessStatusCode) return new();
+            var json = await response.Content.ReadAsStringAsync();
+            var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.TryGetProperty("items", out var items))
+            {
+                return JsonSerializer.Deserialize<List<Brand>>(items.GetRawText(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            }
+            if (doc.RootElement.TryGetProperty("data", out var data))
+            {
+                return JsonSerializer.Deserialize<List<Brand>>(data.GetRawText(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+            }
+            return JsonSerializer.Deserialize<List<Brand>>(json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+        }
+        catch { return new(); }
+    }
 }

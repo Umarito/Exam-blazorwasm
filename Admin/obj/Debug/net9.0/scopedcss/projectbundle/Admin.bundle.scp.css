@@ -112,6 +112,22 @@ main[b-x6se4ro1e7] {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-list-nested' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M4.5 11.5A.5.5 0 0 1 5 11h10a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zm-2-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm-2-4A.5.5 0 0 1 1 3h10a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5z'/%3E%3C/svg%3E");
 }
 
+.bi-box-seam-nav-menu[b-6ge3wnuc7n] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-box-seam' viewBox='0 0 16 16'%3E%3Cpath d='M8.186 1.113a.5.5 0 0 0-.372 0l-7 2.5A.5.5 0 0 0 .5 4v5a.5.5 0 0 0 .5.5h.5c.067 0 .131.01.192.03l7.2-4.6a.5.5 0 0 0-.384-.93l-6.717 4.29h-.242V4.905l6.905-2.46.563.294.404-.808zm.556 5.392l-1.814 1.165-7.056-4.536A.5.5 0 0 0 .5 5v6a.5.5 0 0 0 .5.5h.5a.5.5 0 0 0 .5-.5v-6l7.056 4.536Z'/%3E%3C/svg%3E");
+}
+
+.bi-tags-nav-menu[b-6ge3wnuc7n] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-tags' viewBox='0 0 16 16'%3E%3Cpath d='M3 2v4.586L9.414 3H4a1 1 0 0 0-1 1v4.586L.914 3.414A.5.5 0 0 0 .415 4l3.85 3.85A1 1 0 0 0 5 7h7.586L9.414 11H4a1 1 0 0 0-1 1v1.586L.914 11.414a.5.5 0 1 0-.707.707l3.85 3.85A1 1 0 0 0 5 15h7.586L9.414 15H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2zm3-1a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V1z'/%3E%3C/svg%3E");
+}
+
+.bi-bookmark-nav-menu[b-6ge3wnuc7n] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-bookmark-star' viewBox='0 0 16 16'%3E%3Cpath d='M7.84 0a.5.5 0 0 1 .403.191l1.664 2.108a.5.5 0 0 0 .294.148h2.016a.5.5 0 0 1 .5.5v2.016a.5.5 0 0 0 .148.294l2.108 1.664a.5.5 0 0 1 0 .806l-2.108 1.664a.5.5 0 0 0-.148.294v2.016a.5.5 0 0 1-.5.5H10.2a.5.5 0 0 0-.294.148l-1.664 2.108a.5.5 0 0 1-.806 0l-1.664-2.108a.5.5 0 0 0-.294-.148H2.5a.5.5 0 0 1-.5-.5v-2.016a.5.5 0 0 0-.148-.294L0 8.807a.5.5 0 0 1 0-.806l2.108-1.664A.5.5 0 0 0 2.352 6.191V4.175a.5.5 0 0 1 .5-.5h2.016a.5.5 0 0 0 .294-.148l1.664-2.108a.5.5 0 0 1 .403-.191z'/%3E%3C/svg%3E");
+}
+
+.bi-arrow-bar-left[b-6ge3wnuc7n] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-arrow-bar-left' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5-.5V5.707L7.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L10.5 5.707V7.5a.5.5 0 0 1-.5.5Z'/%3E%3C/svg%3E");
+}
+
 .nav-item[b-6ge3wnuc7n] {
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
