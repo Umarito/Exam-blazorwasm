@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using WebApi.DTOs;
 
-public class BannerRepository(ApplicationDbContext applicationDBContext,ILogger<BannerRepository> logger) : IBannerRepository
+public class BannerRepository(ApplicationDbContext applicationDBContext) : IBannerRepository
 {
     private readonly ApplicationDbContext _context = applicationDBContext;
-    private readonly ILogger<BannerRepository> _logger = logger;
+    // private readonly ILogger<BannerRepository> _logger = logger;
 
     public async Task AddAsync(Banner Banner)
     {

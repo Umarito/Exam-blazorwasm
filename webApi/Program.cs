@@ -199,7 +199,10 @@ try
         new { Name = "Cleaning", Slug = "cleaning", Description = "Vacuum and cleaning tech", Parent = "home-appliances" },
         new { Name = "Headphones", Slug = "headphones", Description = "Headphones and earbuds", Parent = "audio" },
         new { Name = "Speakers", Slug = "speakers", Description = "Wireless speakers and soundbars", Parent = "audio" },
-        new { Name = "Smart Watches", Slug = "smart-watches", Description = "Wearable smart tech", Parent = "wearables" }
+        new { Name = "Smart Watches", Slug = "smart-watches", Description = "Wearable smart tech", Parent = "wearables" },
+        new { Name = "Tablets", Slug = "tablets", Description = "Tablets and iPads", Parent = "smartphones" },
+        new { Name = "Cameras", Slug = "cameras", Description = "Cameras and lenses", Parent = "audio" },
+        new { Name = "Monitors", Slug = "monitors", Description = "Displays and monitors", Parent = "laptops" }
     };
 
     foreach (var sub in subCategorySeeds)
@@ -235,7 +238,15 @@ try
         new Brand { Name = "HP", Slug = "hp" },
         new Brand { Name = "Lenovo", Slug = "lenovo" },
         new Brand { Name = "Xiaomi", Slug = "xiaomi" },
-        new Brand { Name = "Microsoft", Slug = "microsoft" }
+        new Brand { Name = "Microsoft", Slug = "microsoft" },
+        new Brand { Name = "Asus", Slug = "asus" },
+        new Brand { Name = "Acer", Slug = "acer" },
+        new Brand { Name = "JBL", Slug = "jbl" },
+        new Brand { Name = "Canon", Slug = "canon" },
+        new Brand { Name = "Nikon", Slug = "nikon" },
+        new Brand { Name = "Philips", Slug = "philips" },
+        new Brand { Name = "Huawei", Slug = "huawei" },
+        new Brand { Name = "OnePlus", Slug = "oneplus" }
     };
     foreach (var brand in brandSeeds)
     {

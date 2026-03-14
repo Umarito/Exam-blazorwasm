@@ -32,12 +32,36 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSZWRpcmVjdFRvTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Attributes.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXR0cmlidXRlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Banners.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmFubmVycy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Brands.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQnJhbmRzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/CartItems.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FydEl0ZW1zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Carts.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2FydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Categories.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2F0ZWdvcmllcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Cities.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2l0aWVzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/ContactMessages.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29udGFjdE1lc3NhZ2VzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Counter.razor]
@@ -56,6 +80,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/OrderItems.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT3JkZXJJdGVtcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Orders.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT3JkZXJzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/PagesAdmin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFnZXNBZG1pbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/ProductAttributes.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdEF0dHJpYnV0ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/ProductImages.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdEltYWdlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Products.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJvZHVjdHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -64,8 +108,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXIucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Reviews.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmV2aWV3cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/StoreLocations.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RvcmVMb2NhdGlvbnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Users.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlcnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Weather.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2VhdGhlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/Pages/Wishlists.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcV2lzaGxpc3RzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/a/Desktop/C\#.NET/.Net Third Month/.Net first week/Exam2/Admin/_Imports.razor]

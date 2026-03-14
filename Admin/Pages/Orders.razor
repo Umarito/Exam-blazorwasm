@@ -1,0 +1,154 @@
+@page "/orders"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+
+<PageTitle>Manage Orders - Avrang Admin</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Orders</h1>
+        <button class="btn btn-success" @onclick="OpenAddModal">Add Order</button>
+    </div>
+
+    @if (_orders == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else if (_orders.Count == 0)
+    {
+        <div class="alert alert-info">No orders found.</div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>UserId</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Delivery Address</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var o in _orders)
+                {
+                    <tr>
+                        <td>@o.Id</td>
+                        <td>@o.UserId</td>
+                        <td>$@o.TotalAmount.ToString("F2")</td>
+                        <td>@o.Status</td>
+                        <td>@o.DeliveryAddress</td>
+                        <td>@o.Phone</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => EditOrder(o)">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteOrder(o.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@if (_showModal)
+{
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(_isEdit ? "Edit Order" : "Add Order")</h5>
+                    <button type="button" class="btn-close" @onclick="() => _showModal = false"></button>
+                </div>
+                <EditForm Model="@_editingOrder" OnValidSubmit="SaveOrder">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>UserId</label>
+                            <InputText @bind-Value="_editingOrder.UserId" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Total Amount</label>
+                            <InputNumber @bind-Value="_editingOrder.TotalAmount" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Delivery Address</label>
+                            <InputText @bind-Value="_editingOrder.DeliveryAddress" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Phone</label>
+                            <InputText @bind-Value="_editingOrder.Phone" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Status</label>
+                            <InputText @bind-Value="_editingOrder.Status" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="() => _showModal = false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Order>? _orders;
+    private bool _showModal;
+    private bool _isEdit;
+    private Order _editingOrder = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _orders = await Api.GetOrdersAsync();
+    }
+
+    private void OpenAddModal()
+    {
+        _isEdit = false;
+        _editingOrder = new Order();
+        _showModal = true;
+    }
+
+    private void EditOrder(Order o)
+    {
+        _isEdit = true;
+        _editingOrder = new Order
+        {
+            Id = o.Id,
+            UserId = o.UserId,
+            DeliveryAddress = o.DeliveryAddress,
+            Phone = o.Phone,
+            Status = o.Status
+        };
+        _showModal = true;
+    }
+
+    private async Task SaveOrder()
+    {
+        bool success = _isEdit
+            ? await Api.UpdateOrderAsync(_editingOrder)
+            : await Api.CreateOrderAsync(_editingOrder);
+
+        if (success)
+        {
+            _showModal = false;
+            await LoadData();
+        }
+    }
+
+    private async Task DeleteOrder(int id)
+    {
+        if (await Api.DeleteOrderAsync(id))
+            await LoadData();
+    }
+}

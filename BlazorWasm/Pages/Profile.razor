@@ -1,9 +1,11 @@
 @page "/profile"
+@implements IDisposable
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 @inject JwtAuthenticationStateProvider AuthProvider
 @inject OrderApiService OrderService
 @inject WishlistService WishlistService
+@inject RecentlyViewedService RecentlyViewed
 @inject AuthService AuthService
 @inject NavigationManager Nav
 
@@ -98,6 +100,34 @@
                 </div>
             }
         </div>
+
+        <div class="section-card hover-lift delay-2">
+            <div class="section-title">
+                <h2>Recently Viewed</h2>
+                <span class="view-all text-muted" style="cursor:default;">Last 12 items</span>
+            </div>
+            @if (!RecentlyViewed.Items.Any())
+            {
+                <p class="text-muted" style="padding: 20px;">You haven’t viewed any products yet.</p>
+            }
+            else
+            {
+                <div class="horizontal-scroll">
+                    @foreach (var prod in RecentlyViewed.Items.Take(12))
+                    {
+                        <div class="mini-card hover-zoom" @onclick='() => Nav.NavigateTo($"/product/{prod.Id}")' style="cursor:pointer;">
+                            <div class="mini-image">
+                                <img src="@GetProductImage(prod)" alt="@prod.Name" style="width:100%; height:100%; object-fit:cover; border-radius: var(--radius-sm);" />
+                            </div>
+                            <div class="mini-info">
+                                <h4>@prod.Name</h4>
+                                <span class="mini-price price-accent">$@prod.Price.ToString("F2")</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
     </div>
 </div>
 
@@ -109,11 +139,15 @@
     protected override async Task OnInitializedAsync()
     {
         _userName = await AuthProvider.GetUserNameAsync() ?? "User";
-        _recentOrders = await OrderService.GetMyOrdersAsync();
+        var userId = await AuthProvider.GetUserIdAsync();
+        _recentOrders = await OrderService.GetMyOrdersAsync(userId);
         _isLoadingOrders = false;
         
         await WishlistService.InitializeAsync();
         WishlistService.OnChanged += StateHasChanged;
+
+        await RecentlyViewed.InitializeAsync();
+        RecentlyViewed.OnChanged += StateHasChanged;
     }
 
     private async Task Logout()
@@ -147,5 +181,6 @@
     public void Dispose()
     {
         WishlistService.OnChanged -= StateHasChanged;
+        RecentlyViewed.OnChanged -= StateHasChanged;
     }
 }

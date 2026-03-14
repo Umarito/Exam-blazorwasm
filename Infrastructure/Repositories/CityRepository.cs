@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using WebApi.DTOs;
 
-public class CityRepository(ApplicationDbContext applicationDBContext,ILogger<CityRepository> logger) : ICityRepository
+public class CityRepository(ApplicationDbContext applicationDBContext) : ICityRepository
 {
     private readonly ApplicationDbContext _context = applicationDBContext;
-    private readonly ILogger<CityRepository> _logger = logger;
+    // private readonly ILogger<CityRepository> _logger = logger;
 
     public async Task AddAsync(City City)
     {

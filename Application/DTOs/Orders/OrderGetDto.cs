@@ -1,6 +1,7 @@
 public class OrderGetDto
 {
     public int Id{get;set;}
+    public DateTime CreatedAt{get;set;}
     public decimal TotalAmount{get;set;}
     public string Status{get;set;} = null!;
     public string DeliveryAddress{get;set;} = null!;

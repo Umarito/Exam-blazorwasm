@@ -24,7 +24,11 @@ public class OrderRepository(ApplicationDbContext applicationDBContext,ILogger<O
 
     public async Task<Order?> GetByIdAsync(int id)
     {
-        return await _context.Orders.FindAsync(id);
+        return await _context.Orders
+            .AsNoTracking()
+            .Include(o => o.Items)
+                .ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(o => o.Id == id);
     }
 
     public async Task UpdateAsync(Order Order)
@@ -38,7 +42,10 @@ public class OrderRepository(ApplicationDbContext applicationDBContext,ILogger<O
         var page = pagedQuery.Page <= 0 ? 1 : pagedQuery.Page;
         var pageSize = pagedQuery.PageSize <= 0 ? 10 : pagedQuery.PageSize;
 
-        IQueryable<Order> query = _context.Orders.AsNoTracking();
+        IQueryable<Order> query = _context.Orders
+            .AsNoTracking()
+            .Include(o => o.Items)
+                .ThenInclude(i => i.Product);
 
         if (!string.IsNullOrWhiteSpace(filter?.Phone))
             query = query.Where(x => x.Phone.Contains(filter.Phone));
@@ -46,11 +53,14 @@ public class OrderRepository(ApplicationDbContext applicationDBContext,ILogger<O
         if (!string.IsNullOrWhiteSpace(filter?.DeliveryAddress))
             query = query.Where(x => x.DeliveryAddress.Contains(filter.DeliveryAddress));
 
-        if (filter?.Status != null)
-            query = query.Where(x => x.Status == filter.Status); 
+        if (filter?.Status.HasValue == true)
+            query = query.Where(x => x.Status == filter.Status.Value); 
 
         if (filter?.TotalAmount > 0)
-        query = query.Where(x => x.TotalAmount <= filter.TotalAmount);
+            query = query.Where(x => x.TotalAmount <= filter.TotalAmount);
+
+        if (!string.IsNullOrWhiteSpace(filter?.UserId))
+            query = query.Where(x => x.UserId == filter.UserId);
 
         var totalCount = await query.CountAsync();
 

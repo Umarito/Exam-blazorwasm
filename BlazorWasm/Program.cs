@@ -25,6 +25,7 @@ builder.Services.AddScoped<ReviewApiService>();
 builder.Services.AddScoped<InstallmentApiService>();
 builder.Services.AddScoped<CartStateService>();
 builder.Services.AddScoped<CompareStateService>();
+builder.Services.AddScoped<RecentlyViewedService>();
 
 // Auth
 builder.Services.AddAuthorizationCore();

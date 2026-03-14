@@ -1,0 +1,5 @@
+// Validating benchmarks:
+// ***** BenchmarkRunner: Start   *****
+// ***** Found 3 benchmark(s) in total *****
+// ***** Building 1 exe(s) in Parallel: Start   *****
+// start dotnet  restore --nodeReuse:false /p:UseSharedCompilation=false /p:Deterministic=true /p:Optimize=true /p:ArtifactsPath="C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\PerformanceTests\bin\Release\net9.0\PerformanceTests-DefaultJob-1/" /p:OutDir="C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\PerformanceTests\bin\Release\net9.0\PerformanceTests-DefaultJob-1\bin\Release\net9.0/" /p:OutputPath="C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\PerformanceTests\bin\Release\net9.0\PerformanceTests-DefaultJob-1\bin\Release\net9.0/" /p:PublishDir="C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\PerformanceTests\bin\Release\net9.0\PerformanceTests-DefaultJob-1\publish/" in C:\Users\a\Desktop\C#.NET\.Net Third Month\.Net first week\Exam2\PerformanceTests\bin\Release\net9.0\PerformanceTests-DefaultJob-1

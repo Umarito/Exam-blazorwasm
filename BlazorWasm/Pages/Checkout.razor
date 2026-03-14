@@ -1,5 +1,7 @@
 @page "/checkout"
 @inject CartStateService CartState
+@inject OrderApiService OrderService
+@inject JwtAuthenticationStateProvider AuthProvider
 
 <PageTitle>Checkout - Avrang.tj</PageTitle>
 
@@ -109,7 +111,20 @@
             </div>
         </div>
 
-        <button class="btn btn-primary" @onclick="CompletePurchase">Complete Purchase</button>
+        <button class="btn btn-primary" @onclick="CompletePurchase" disabled="@_isSubmitting">
+            @if (_isSubmitting)
+            {
+                <span class="spinner-border spinner-border-sm"></span>
+            }
+            else
+            {
+                <span>Complete Purchase</span>
+            }
+        </button>
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="text-danger" style="margin-top: 12px;">@_errorMessage</div>
+        }
         <p class="text-small" style="text-align: center; margin-top: var(--space-3);">
             Secure 256-bit SSL encrypted payment
         </p>
@@ -134,6 +149,8 @@
     private List<CartItem> CartItems { get; set; } = new();
     private string PaymentMethod { get; set; } = "Card";
     private bool ShowSuccess { get; set; } = false;
+    private bool _isSubmitting;
+    private string? _errorMessage;
 
     private class ShippingInfo 
     {
@@ -157,8 +174,54 @@
     private decimal Tax => Subtotal * 0.08m;
     private decimal Total => Subtotal + Tax;
 
-    private void CompletePurchase()
+    private async Task CompletePurchase()
     {
+        _errorMessage = null;
+        _isSubmitting = true;
+
+        var userId = await AuthProvider.GetUserIdAsync();
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            _errorMessage = "Please log in to complete your purchase.";
+            _isSubmitting = false;
+            return;
+        }
+
+        if (CartItems.Count == 0)
+        {
+            _errorMessage = "Your cart is empty.";
+            _isSubmitting = false;
+            return;
+        }
+
+        var orderId = await OrderService.CreateOrderAsync(
+            userId,
+            Subtotal,
+            ShippingDetails.Address,
+            ShippingDetails.Phone
+        );
+
+        if (orderId == null)
+        {
+            _errorMessage = "Failed to create order. Please try again.";
+            _isSubmitting = false;
+            return;
+        }
+
+        foreach (var item in CartItems)
+        {
+            var ok = await OrderService.CreateOrderItemAsync(orderId.Value, item.Product.Id, item.Quantity);
+            if (!ok)
+            {
+                _errorMessage = "Failed to save order items. Please try again.";
+                _isSubmitting = false;
+                return;
+            }
+        }
+
+        CartState.Clear();
+        CartItems.Clear();
         ShowSuccess = true;
+        _isSubmitting = false;
     }
 }

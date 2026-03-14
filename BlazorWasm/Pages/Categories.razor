@@ -141,6 +141,7 @@
     private int? SelectedCategoryId { get; set; }
     private int? SelectedBrandId { get; set; }
     private string SortBy { get; set; } = "newest";
+    private string? SearchQuery { get; set; }
     private decimal? MinPrice { get; set; }
     private decimal? MaxPrice { get; set; }
     private bool _onlyAvailable;
@@ -163,6 +164,18 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadData();
+    }
+
+    protected override void OnParametersSet()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var search = query.Get("search");
+        if (!string.Equals(SearchQuery, search, StringComparison.OrdinalIgnoreCase))
+        {
+            SearchQuery = search;
+            ApplyFilters();
+        }
     }
 
     private async Task LoadData()
@@ -222,6 +235,12 @@
             query = query.Where(p => p.StockQuantity > 0);
         }
 
+        if (!string.IsNullOrWhiteSpace(SearchQuery))
+        {
+            var q = SearchQuery.Trim();
+            query = query.Where(p => p.Name.Contains(q, StringComparison.OrdinalIgnoreCase));
+        }
+
         query = SortBy switch
         {
             "price_low" => query.OrderBy(p => p.Price),
@@ -240,6 +259,7 @@
         MinPrice = null;
         MaxPrice = null;
         OnlyAvailable = false;
+        SearchQuery = null;
         ApplyFilters();
     }
 

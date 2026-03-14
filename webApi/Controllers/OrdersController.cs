@@ -7,7 +7,7 @@ using WebApi.DTOs;
 public class OrdersController(IOrderService OrderService) : ControllerBase
 {
     [HttpPost]
-    public async Task<Response<string>> AddOrderAsync(OrderInsertDto Order)
+    public async Task<Response<int>> AddOrderAsync(OrderInsertDto Order)
     {
         return await OrderService.AddOrderAsync(Order);
     }

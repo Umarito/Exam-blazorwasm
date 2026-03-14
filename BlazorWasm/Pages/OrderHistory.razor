@@ -1,5 +1,6 @@
 @page "/orders"
 @inject OrderApiService OrderService
+@inject JwtAuthenticationStateProvider AuthProvider
 
 <PageTitle>Order History – Avrang.tj</PageTitle>
 
@@ -72,7 +73,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _orders = await OrderService.GetMyOrdersAsync();
+        var userId = await AuthProvider.GetUserIdAsync();
+        _orders = await OrderService.GetMyOrdersAsync(userId);
         _isLoading = false;
     }
 

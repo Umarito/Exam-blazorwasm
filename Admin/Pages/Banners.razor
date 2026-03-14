@@ -1,0 +1,141 @@
+@page "/banners"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+
+<PageTitle>Manage Banners - Avrang Admin</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Banners</h1>
+        <button class="btn btn-success" @onclick="OpenAddModal">Add Banner</button>
+    </div>
+
+    @if (_banners == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else if (_banners.Count == 0)
+    {
+        <div class="alert alert-info">No banners found.</div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>TargetUrl</th>
+                    <th>Order</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var b in _banners)
+                {
+                    <tr>
+                        <td>@b.Id</td>
+                        <td><img src="@b.ImageUrl" style="width:80px;height:40px;object-fit:cover;" /></td>
+                        <td>@b.TargetUrl</td>
+                        <td>@b.DisplayOrder</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => EditBanner(b)">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteBanner(b.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@if (_showModal)
+{
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(_isEdit ? "Edit Banner" : "Add Banner")</h5>
+                    <button type="button" class="btn-close" @onclick="() => _showModal = false"></button>
+                </div>
+                <EditForm Model="@_editingBanner" OnValidSubmit="SaveBanner">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Image URL</label>
+                            <InputText @bind-Value="_editingBanner.ImageUrl" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label>Target URL</label>
+                            <InputText @bind-Value="_editingBanner.TargetUrl" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Display Order</label>
+                            <InputNumber @bind-Value="_editingBanner.DisplayOrder" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="() => _showModal = false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Banner>? _banners;
+    private bool _showModal;
+    private bool _isEdit;
+    private Banner _editingBanner = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _banners = await Api.GetBannersAsync();
+    }
+
+    private void OpenAddModal()
+    {
+        _isEdit = false;
+        _editingBanner = new Banner();
+        _showModal = true;
+    }
+
+    private void EditBanner(Banner b)
+    {
+        _isEdit = true;
+        _editingBanner = new Banner
+        {
+            Id = b.Id,
+            ImageUrl = b.ImageUrl,
+            TargetUrl = b.TargetUrl,
+            DisplayOrder = b.DisplayOrder
+        };
+        _showModal = true;
+    }
+
+    private async Task SaveBanner()
+    {
+        bool success = _isEdit
+            ? await Api.UpdateBannerAsync(_editingBanner)
+            : await Api.CreateBannerAsync(_editingBanner);
+
+        if (success)
+        {
+            _showModal = false;
+            await LoadData();
+        }
+    }
+
+    private async Task DeleteBanner(int id)
+    {
+        if (await Api.DeleteBannerAsync(id))
+            await LoadData();
+    }
+}

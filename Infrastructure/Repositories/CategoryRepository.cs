@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using WebApi.DTOs;
 
-public class CategoryRepository(ApplicationDbContext applicationDBContext,ILogger<CategoryRepository> logger) : ICategoryRepository
+public class CategoryRepository(ApplicationDbContext applicationDBContext) : ICategoryRepository
 {
     private readonly ApplicationDbContext _context = applicationDBContext;
-    private readonly ILogger<CategoryRepository> _logger = logger;
+    // private readonly ILogger<CategoryRepository> _logger = logger;
 
     public async Task AddAsync(Category Category)
     {

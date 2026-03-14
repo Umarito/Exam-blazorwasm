@@ -1,0 +1,127 @@
+@page "/attributes"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+
+<PageTitle>Manage Attributes - Avrang Admin</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Attributes</h1>
+        <button class="btn btn-success" @onclick="OpenAddModal">Add Attribute</button>
+    </div>
+
+    @if (_attributes == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else if (_attributes.Count == 0)
+    {
+        <div class="alert alert-info">No attributes found.</div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in _attributes)
+                {
+                    <tr>
+                        <td>@a.Id</td>
+                        <td>@a.Name</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => EditAttribute(a)">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteAttribute(a.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@if (_showModal)
+{
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(_isEdit ? "Edit Attribute" : "Add Attribute")</h5>
+                    <button type="button" class="btn-close" @onclick="() => _showModal = false"></button>
+                </div>
+                <EditForm Model="@_editingAttribute" OnValidSubmit="SaveAttribute">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Name</label>
+                            <InputText @bind-Value="_editingAttribute.Name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="() => _showModal = false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<AttributeModel>? _attributes;
+    private bool _showModal;
+    private bool _isEdit;
+    private AttributeModel _editingAttribute = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _attributes = await Api.GetAttributesAsync();
+    }
+
+    private void OpenAddModal()
+    {
+        _isEdit = false;
+        _editingAttribute = new AttributeModel();
+        _showModal = true;
+    }
+
+    private void EditAttribute(AttributeModel a)
+    {
+        _isEdit = true;
+        _editingAttribute = new AttributeModel
+        {
+            Id = a.Id,
+            Name = a.Name
+        };
+        _showModal = true;
+    }
+
+    private async Task SaveAttribute()
+    {
+        bool success = _isEdit
+            ? await Api.UpdateAttributeAsync(_editingAttribute)
+            : await Api.CreateAttributeAsync(_editingAttribute);
+
+        if (success)
+        {
+            _showModal = false;
+            await LoadData();
+        }
+    }
+
+    private async Task DeleteAttribute(int id)
+    {
+        if (await Api.DeleteAttributeAsync(id))
+            await LoadData();
+    }
+}

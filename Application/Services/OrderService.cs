@@ -12,20 +12,20 @@ public class OrderService(IMapper mapper,IOrderRepository OrderRepository,ILogge
     private readonly ILogger<OrderService> _logger = logger;
     private string BuildCacheKey(OrderFilter filter, PagedQuery query)
     {
-        return $"Orders:getAll:page={query.Page}:size={query.PageSize}:deliveryAddress={filter?.DeliveryAddress}:phone={filter?.Phone}:status={filter?.Status}:totalAmount={filter?.TotalAmount}";
+        return $"Orders:getAll:page={query.Page}:size={query.PageSize}:deliveryAddress={filter?.DeliveryAddress}:phone={filter?.Phone}:status={filter?.Status}:totalAmount={filter?.TotalAmount}:userId={filter?.UserId}";
     }
-    public async Task<Response<string>> AddOrderAsync(OrderInsertDto OrderInsertDto)
+    public async Task<Response<int>> AddOrderAsync(OrderInsertDto OrderInsertDto)
     {
         try
         {
             var Order = _mapper.Map<Order>(OrderInsertDto);
             await _OrderRepository.AddAsync(Order);
-            return new Response<string>(HttpStatusCode.OK, "Order was added successfully");
+            return new Response<int>(HttpStatusCode.OK, "Order was added successfully", Order.Id);
         }
         catch(Exception ex)
         {
             _logger.LogWarning(ex.Message);
-            return new Response<string>(HttpStatusCode.InternalServerError, "Internal Server Error");
+            return new Response<int>(HttpStatusCode.InternalServerError, "Internal Server Error");
         }
     }
 

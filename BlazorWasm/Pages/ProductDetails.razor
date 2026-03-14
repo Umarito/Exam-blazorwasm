@@ -4,6 +4,7 @@
 @inject CartStateService CartState
 @inject CompareStateService CompareState
 @inject InstallmentApiService InstallmentService
+@inject RecentlyViewedService RecentlyViewed
 @inject NavigationManager Nav
 
 <PageTitle>@(Product?.Name ?? "Product") | Avrang.tj</PageTitle>
@@ -189,6 +190,8 @@ else
     private async Task LoadProductAsync()
     {
         Product = await ProductService.GetProductAsync(Id);
+        if (Product != null)
+            await RecentlyViewed.AddAsync(Product);
         _isLoading = false;
     }
 

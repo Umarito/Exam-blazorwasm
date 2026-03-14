@@ -78,4 +78,12 @@ public class JwtAuthenticationStateProvider : AuthenticationStateProvider
         var state = await GetAuthenticationStateAsync();
         return state.User.Identity?.IsAuthenticated == true;
     }
+
+    public async Task<string?> GetUserIdAsync()
+    {
+        var state = await GetAuthenticationStateAsync();
+        return state.User.Claims.FirstOrDefault(c =>
+            c.Type == JwtRegisteredClaimNames.Sub ||
+            c.Type == ClaimTypes.NameIdentifier)?.Value;
+    }
 }

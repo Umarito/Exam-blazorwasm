@@ -107,4 +107,24 @@ public class BrandService(IMapper mapper,IBrandRepository BrandRepository,ILogge
             return new Response<string>(HttpStatusCode.InternalServerError,"Internal Server Error");
         }
     }
+    // public async Task<List<BrandGetDto>> GetAllBrandAsync()
+    // {
+    //     try
+    //     {
+    //         var messages = _BrandRepository.GetBrandsAsync();
+    //         if(messages == null)
+    //         {
+    //             return new <List<BrandGetDto>>;
+    //         }
+    //         else
+    //         {
+    //             var mapped = _mapper.Map<List<BrandGetDto>>(messages);
+    //             return new Response<List<BrandGetDto>>(HttpStatusCode.OK,"ok",mapped);
+    //         }
+    //     }
+    //     catch(Exception ex)
+    //     {
+    //         return new Response<List<BrandGetDto>>(HttpStatusCode.InternalServerError,ex.Message);
+    //     }
+    // }
 }

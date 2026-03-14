@@ -1,0 +1,127 @@
+@page "/cities"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+
+<PageTitle>Manage Cities - Avrang Admin</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Cities</h1>
+        <button class="btn btn-success" @onclick="OpenAddModal">Add City</button>
+    </div>
+
+    @if (_cities == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else if (_cities.Count == 0)
+    {
+        <div class="alert alert-info">No cities found.</div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in _cities)
+                {
+                    <tr>
+                        <td>@c.Id</td>
+                        <td>@c.Name</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => EditCity(c)">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteCity(c.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@if (_showModal)
+{
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(_isEdit ? "Edit City" : "Add City")</h5>
+                    <button type="button" class="btn-close" @onclick="() => _showModal = false"></button>
+                </div>
+                <EditForm Model="@_editingCity" OnValidSubmit="SaveCity">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Name</label>
+                            <InputText @bind-Value="_editingCity.Name" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="() => _showModal = false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<City>? _cities;
+    private bool _showModal;
+    private bool _isEdit;
+    private City _editingCity = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _cities = await Api.GetCitiesAsync();
+    }
+
+    private void OpenAddModal()
+    {
+        _isEdit = false;
+        _editingCity = new City();
+        _showModal = true;
+    }
+
+    private void EditCity(City c)
+    {
+        _isEdit = true;
+        _editingCity = new City
+        {
+            Id = c.Id,
+            Name = c.Name
+        };
+        _showModal = true;
+    }
+
+    private async Task SaveCity()
+    {
+        bool success = _isEdit
+            ? await Api.UpdateCityAsync(_editingCity)
+            : await Api.CreateCityAsync(_editingCity);
+
+        if (success)
+        {
+            _showModal = false;
+            await LoadData();
+        }
+    }
+
+    private async Task DeleteCity(int id)
+    {
+        if (await Api.DeleteCityAsync(id))
+            await LoadData();
+    }
+}

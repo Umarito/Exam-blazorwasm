@@ -1,0 +1,141 @@
+@page "/cart-items"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+
+<PageTitle>Manage Cart Items - Avrang Admin</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Cart Items</h1>
+        <button class="btn btn-success" @onclick="OpenAddModal">Add Cart Item</button>
+    </div>
+
+    @if (_items == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else if (_items.Count == 0)
+    {
+        <div class="alert alert-info">No cart items found.</div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CartId</th>
+                    <th>ProductId</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var i in _items)
+                {
+                    <tr>
+                        <td>@i.Id</td>
+                        <td>@i.CartId</td>
+                        <td>@i.ProductId</td>
+                        <td>@i.Quantity</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => EditItem(i)">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteItem(i.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@if (_showModal)
+{
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(_isEdit ? "Edit Cart Item" : "Add Cart Item")</h5>
+                    <button type="button" class="btn-close" @onclick="() => _showModal = false"></button>
+                </div>
+                <EditForm Model="@_editingItem" OnValidSubmit="SaveItem">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>CartId</label>
+                            <InputNumber @bind-Value="_editingItem.CartId" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>ProductId</label>
+                            <InputNumber @bind-Value="_editingItem.ProductId" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Quantity</label>
+                            <InputNumber @bind-Value="_editingItem.Quantity" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="() => _showModal = false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<CartItem>? _items;
+    private bool _showModal;
+    private bool _isEdit;
+    private CartItem _editingItem = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _items = await Api.GetCartItemsAsync();
+    }
+
+    private void OpenAddModal()
+    {
+        _isEdit = false;
+        _editingItem = new CartItem();
+        _showModal = true;
+    }
+
+    private void EditItem(CartItem i)
+    {
+        _isEdit = true;
+        _editingItem = new CartItem
+        {
+            Id = i.Id,
+            CartId = i.CartId,
+            ProductId = i.ProductId,
+            Quantity = i.Quantity
+        };
+        _showModal = true;
+    }
+
+    private async Task SaveItem()
+    {
+        bool success = _isEdit
+            ? await Api.UpdateCartItemAsync(_editingItem)
+            : await Api.CreateCartItemAsync(_editingItem);
+
+        if (success)
+        {
+            _showModal = false;
+            await LoadData();
+        }
+    }
+
+    private async Task DeleteItem(int id)
+    {
+        if (await Api.DeleteCartItemAsync(id))
+            await LoadData();
+    }
+}

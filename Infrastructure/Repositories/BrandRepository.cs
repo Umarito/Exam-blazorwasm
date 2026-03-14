@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using WebApi.DTOs;
 
-public class BrandRepository(ApplicationDbContext applicationDBContext,ILogger<BrandRepository> logger) : IBrandRepository
+public class BrandRepository(ApplicationDbContext applicationDBContext) : IBrandRepository
 {
     private readonly ApplicationDbContext _context = applicationDBContext;
-    private readonly ILogger<BrandRepository> _logger = logger;
+    // private readonly ILogger<BrandRepository> _logger = logger;
 
     public async Task AddAsync(Brand Brand)
     {
@@ -65,5 +65,9 @@ public class BrandRepository(ApplicationDbContext applicationDBContext,ILogger<B
             TotalCount = totalCount,
             TotalPages = totalPages
         };
+    }
+     public async Task<List<Brand>> GetBrandsAsync()
+    {
+        return await _context.Brands.Select(x=>new Brand(x.Id, x.Name, x.Slug, x.LogoUrl)).ToListAsync();
     }
 }

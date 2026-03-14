@@ -1,0 +1,153 @@
+@page "/reviews"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+
+<PageTitle>Manage Reviews - Avrang Admin</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Reviews</h1>
+        <button class="btn btn-success" @onclick="OpenAddModal">Add Review</button>
+    </div>
+
+    @if (_reviews == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else if (_reviews.Count == 0)
+    {
+        <div class="alert alert-info">No reviews found.</div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>UserId</th>
+                    <th>ProductId</th>
+                    <th>Rating</th>
+                    <th>Approved</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in _reviews)
+                {
+                    <tr>
+                        <td>@r.Id</td>
+                        <td>@r.UserId</td>
+                        <td>@r.ProductId</td>
+                        <td>@r.Rating</td>
+                        <td>@(r.IsApproved ? "Yes" : "No")</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => EditReview(r)">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteReview(r.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@if (_showModal)
+{
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(_isEdit ? "Edit Review" : "Add Review")</h5>
+                    <button type="button" class="btn-close" @onclick="() => _showModal = false"></button>
+                </div>
+                <EditForm Model="@_editingReview" OnValidSubmit="SaveReview">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>UserId</label>
+                            <InputText @bind-Value="_editingReview.UserId" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>ProductId</label>
+                            <InputNumber @bind-Value="_editingReview.ProductId" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Rating</label>
+                            <InputNumber @bind-Value="_editingReview.Rating" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Comment</label>
+                            <InputTextArea @bind-Value="_editingReview.Comment" class="form-control" />
+                        </div>
+                        <div class="form-check">
+                            <InputCheckbox @bind-Value="_editingReview.IsApproved" class="form-check-input" id="revApproved" />
+                            <label class="form-check-label" for="revApproved">Approved</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="() => _showModal = false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Review>? _reviews;
+    private bool _showModal;
+    private bool _isEdit;
+    private Review _editingReview = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _reviews = await Api.GetReviewsAsync();
+    }
+
+    private void OpenAddModal()
+    {
+        _isEdit = false;
+        _editingReview = new Review();
+        _showModal = true;
+    }
+
+    private void EditReview(Review r)
+    {
+        _isEdit = true;
+        _editingReview = new Review
+        {
+            Id = r.Id,
+            UserId = r.UserId,
+            ProductId = r.ProductId,
+            Rating = r.Rating,
+            Comment = r.Comment,
+            IsApproved = r.IsApproved
+        };
+        _showModal = true;
+    }
+
+    private async Task SaveReview()
+    {
+        bool success = _isEdit
+            ? await Api.UpdateReviewAsync(_editingReview)
+            : await Api.CreateReviewAsync(_editingReview);
+
+        if (success)
+        {
+            _showModal = false;
+            await LoadData();
+        }
+    }
+
+    private async Task DeleteReview(int id)
+    {
+        if (await Api.DeleteReviewAsync(id))
+            await LoadData();
+    }
+}

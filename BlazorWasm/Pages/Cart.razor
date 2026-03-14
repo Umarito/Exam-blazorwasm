@@ -27,6 +27,7 @@
                 @foreach (var item in CartItems)
                 {
                     <div class="cart-item">
+                        <button class="remove-x" title="Remove" @onclick="() => RemoveItem(item)">×</button>
                         <div class="cart-item-img">
                             <img src="@GetProductImage(item.Product)" alt="@item.Product.Name" />
                         </div>
@@ -83,6 +84,7 @@
                 </div>
 
                 <a href="/checkout" class="btn-checkout">Go to Checkout</a>
+                <button class="btn-clear-cart" @onclick="ClearCart">Clear Cart</button>
                 
                 <p style="font-size: 12px; color: var(--text-secondary); text-align: center; margin-top: var(--space-3);">
                     Secure SSL encrypted payment
@@ -116,6 +118,11 @@
     private void RemoveItem(CartItem item)
     {
         CartState.Remove(item.Product.Id);
+    }
+
+    private void ClearCart()
+    {
+        CartState.Clear();
     }
 
     private static readonly Dictionary<string, string> _imageMap = new(StringComparer.OrdinalIgnoreCase)

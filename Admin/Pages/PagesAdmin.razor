@@ -1,0 +1,146 @@
+@page "/pages-admin"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject AdminApiService Api
+
+<PageTitle>Manage Pages - Avrang Admin</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Pages</h1>
+        <button class="btn btn-success" @onclick="OpenAddModal">Add Page</button>
+    </div>
+
+    @if (_pages == null)
+    {
+        <div class="text-center py-5"><div class="spinner-border"></div></div>
+    }
+    else if (_pages.Count == 0)
+    {
+        <div class="alert alert-info">No pages found.</div>
+    }
+    else
+    {
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Slug</th>
+                    <th>Published</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in _pages)
+                {
+                    <tr>
+                        <td>@p.Id</td>
+                        <td>@p.Title</td>
+                        <td>@p.Slug</td>
+                        <td>@(p.IsPublished ? "Yes" : "No")</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-2" @onclick="() => EditPage(p)">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" @onclick="() => DeletePage(p.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@if (_showModal)
+{
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(_isEdit ? "Edit Page" : "Add Page")</h5>
+                    <button type="button" class="btn-close" @onclick="() => _showModal = false"></button>
+                </div>
+                <EditForm Model="@_editingPage" OnValidSubmit="SavePage">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label>Title</label>
+                            <InputText @bind-Value="_editingPage.Title" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Slug</label>
+                            <InputText @bind-Value="_editingPage.Slug" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label>Content</label>
+                            <InputTextArea @bind-Value="_editingPage.Content" class="form-control" rows="6" />
+                        </div>
+                        <div class="form-check">
+                            <InputCheckbox @bind-Value="_editingPage.IsPublished" class="form-check-input" id="pagePub" />
+                            <label class="form-check-label" for="pagePub">Published</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="() => _showModal = false">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<Page>? _pages;
+    private bool _showModal;
+    private bool _isEdit;
+    private Page _editingPage = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _pages = await Api.GetPagesAsync();
+    }
+
+    private void OpenAddModal()
+    {
+        _isEdit = false;
+        _editingPage = new Page();
+        _showModal = true;
+    }
+
+    private void EditPage(Page p)
+    {
+        _isEdit = true;
+        _editingPage = new Page
+        {
+            Id = p.Id,
+            Title = p.Title,
+            Slug = p.Slug,
+            Content = p.Content,
+            IsPublished = p.IsPublished
+        };
+        _showModal = true;
+    }
+
+    private async Task SavePage()
+    {
+        bool success = _isEdit
+            ? await Api.UpdatePageAsync(_editingPage)
+            : await Api.CreatePageAsync(_editingPage);
+
+        if (success)
+        {
+            _showModal = false;
+            await LoadData();
+        }
+    }
+
+    private async Task DeletePage(int id)
+    {
+        if (await Api.DeletePageAsync(id))
+            await LoadData();
+    }
+}
